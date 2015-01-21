@@ -1,0 +1,26 @@
+summary.modules.test_domain.TestDomain:
+        columns:
+            id: id
+            domain: domain
+            created_at: createdAt
+            updated_at: updatedAt
+
+summary.modules.test_queue.TestQueue:
+        columns:
+            id: id
+            queue_name: queueName
+            created_at: createdAt
+            updated_at: updatedAt
+
+summary.modules.test_action.TestAction:
+        columns:
+            id: id
+            queue_id: queueId
+            test_num: testNum
+            url_path: urlPath
+            forms: forms
+            el_type: elType
+            el_value: elValue
+            action: action
+            created_at: createdAt
+            updated_at: updatedAt

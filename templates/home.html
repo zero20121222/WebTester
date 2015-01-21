@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div>
+    <div>
+        <label for="domain_select">Test Domain:</label>
+        <select id="domain_select">
+            {% for domain_val in domain_values %}
+            <option value="{{domain_val.id}}">{{domain_val.domain}}</option>
+            {% end %}
+        </select>
+        <label style="margin-left:200px" for="queue_select">Test Queue:</label>
+        <select id="queue_select">
+            {% for queue_val in queue_values %}
+                {% if params.get("queueId") is not None and params.get("queueId") == str(queue_val.id) %}
+                    <option value="{{queue_val.id}}" selected="selected">{{queue_val.queueName}}</option>
+                {% else %}
+                    <option value="{{queue_val.id}}">{{queue_val.queueName}}</option>
+                {% end %}
+            {% end %}
+        </select>
+        <br>
+        <table id="tester_table" style="width:100%;margin-top:20px;text-align:center">
+            <tr style="background:#eeeedc;font-size:14px">
+                <td>all<input type="checkbox"/></td>
+                <td>Test Num</td>
+                <td>Url Path</td>
+                <td>EL Type</td>
+                <td>EL Value</td>
+                <td>Action</td>
+                <td>Tests</td>
+                <td>Param Num</td>
+                <td>Detail</td>
+            </tr>
+            {% for action_val in action_values%}
+            <tr>
+                <td><input type="checkbox"/></td>
+                <td>{{action_val.testNum}}</td>
+                <td>{{action_val.urlPath}}</td>
+                <td>{{EL_TYPE.value(action_val.elType)}}</td>
+                <td>{{action_val.elValue}}</td>
+                <td>{{ACTION_TYPE.value(action_val.action)}}</td>
+                {% if action_val.forms is not None and len(json_dict(action_val.forms)) > 0 %}
+                    <td>{{len(json_dict(action_val.forms))}}</td>
+                    <td>{{len(json_dict(action_val.forms)[0]["params"])}}</td>
+                {% else %}
+                    <td>0</td>
+                    <td>0</td>
+                {% end %}
+                <td><a>detail</a></td>
+            </tr>
+            {% end %}
+        </table>
+        <hr>
+        <button id="submit_test">Tes Queue</button>
+    </div>
+</div>
+{% end %}
+
+{% block bottom %}
+<script type="text/javascript">
+    $.ajaxSetup({
+        beforeSend: function(jqXHR, settings) {
+            type = settings.type
+            if (type != 'GET' && type != 'HEAD' && type != 'OPTIONS') {
+                var pattern = /(.+; *)?_xsrf *= *([^;" ]+)/;
+                var xsrf = pattern.exec(document.cookie);
+                if (xsrf) {
+                    jqXHR.setRequestHeader('X-Xsrftoken', xsrf[2]);
+                }
+            }
+    }});
+
+    jQuery(document).ready(function($) {
+        $("#queue_select").change(function(){
+            location.href = "http://localhost:8888/?queueId="+$(this).val();
+        })
+
+        $("#submit_test").click(function(){
+            var domainId = $("#domain_select").val();
+            var queueId = $("#queue_select").val();
+            var actionIds = []
+            $("#tester_table input:gt(0)").each(
+                function(){
+                    if(this.checked){
+                        actionIds.push($(this).parent().next().text());
+                    }
+                }
+            );
+
+            params = {
+                domainId: domainId,
+                queueId: queueId,
+                actionIds: actionIds.toString()
+            }
+
+            $.get("/api/tester_deal", params);
+        })
+    })
+</script>
+{% end %}

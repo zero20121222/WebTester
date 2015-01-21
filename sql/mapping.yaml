@@ -1,0 +1,11 @@
+summary.daos.TestDao:
+    TestDao:
+        query:
+            method: query
+            sql: select * from ecp_users limit %s;
+
+summary.daos.TestDao:
+    TestDao:
+        query:
+            method: query
+            sql: select * from ecp_users limit %s;

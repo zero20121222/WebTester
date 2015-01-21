@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div>
+    <div class="test_form">
+        <div>
+            <form class="contact_form" action="#" method="post" name="contact_form">
+                {% module xsrf_form_html() %}
+                <label for="domain_select">Test Domain:</label>
+                <select id="domain_select">
+                    {% for domain_val in domain_values %}
+                    <option value="{{domain_val.id}}">{{domain_val.domain}}</option>
+                    {% end %}
+                </select>
+                <a id="add_domain">Add</a>
+                <span class="required_notification">* 必填项</span>
+                <br>
+                <label for="queue_select">Test Queue:</label>
+                <select id="queue_select">
+                    {% for queue_val in queue_values %}
+                    <option value="{{queue_val.id}}">{{queue_val.queueName}}</option>
+                    {% end %}
+                </select>
+                <a id="add_queue">Add</a>
+                <br>
+                <label for="urlPath">Url Path:</label>
+                <input type="text" name="urlPath" id="urlPath" placeholder="/login" required/><br>
+                <label for="forms">Forms:</label>
+                <input id="forms" name="forms" style="width:15px;height:15px" type="checkbox"/>
+                <a id="add_tester_form" style="float:right;display:inline;">Add Tester</a>
+                <hr>
+                <div id="add_form_info" style="display:none">
+                    <ul id="form_tester">
+                        <li>
+                            <label for="testName">TestName:</label>
+                            <input type="text" name="testName" id="testName" placeholder="测试帐户不存在"/>
+                            <a class="add_element">Add Element</a>
+                        </li>
+                        <li>
+                            <label for="elementName">ElementName:</label>
+                            <input type="text" name="elementName" id="elementName" placeholder="loginBy"/>
+                            <label style="margin-left:20px" for="elementValue">ElementValue:</label>
+                            <input type="text" name="elementValue" id="elementValue" placeholder="测试用户名"/>
+                        </li>
+                    </ul>
+                </div>
+                <label for="elType">El Type:</label>
+                <select id="elType">
+                    <option value="1">id</option>
+                    <option value="2">name</option>
+                    <option value="3">tag</option>
+                    <option value="4">value</option>
+                    <option value="5">selector</option>
+                    <option value="6">css</option>
+                </select>
+                <label style="margin-left:100px" for="elValue">El Value:</label>
+                <input type="text" name="elValue" id="elValue" placeholder="login-submit" required/><br>
+                <label for="action_select">Action:</label>
+                <select id="action_select">
+                    <option value="1">click</option>
+                    <option value="2">double click</option>
+                    <option value="3">right click</option>
+                    <option value="4">mouse over</option>
+                    <option value="5">mouse out</option>
+                    <option value="6">select</option>
+                </select><br>
+                <hr>
+                <button id="submit_tester" class="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="theme-popover" id="create_domain">
+    <div class="theme-poptit">
+        <a href="javascript:;" title="关闭" id="domain_close" class="close">×</a>
+        <h3>Add Test Domain</h3>
+    </div>
+    <div class="dform">
+        <form class="contact_form" name="domain_form" action="/edit_domain" method="post">
+            {% module xsrf_form_html() %}
+            <ul>
+                <li>
+                    <label for="testDomain">TestDomain:</label>
+                    <input type="url" name="testDomain" id="testDomain" placeholder="http://www.daqihui.cn" required pattern="(http|https)://.+"/>
+                    <span class="form_hint">正确格式为：http://www.daqihui.cn</span>
+                    <button class="submit" type="submit">Submit</button>
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>
+<div class="theme-popover" id="create_queue">
+    <div class="theme-poptit">
+        <a href="javascript:;" title="关闭" id="queue_close" class="close">×</a>
+        <h3>Add Test Queue</h3>
+    </div>
+    <div class="dform">
+        <form class="contact_form" name="queue_form" action="/edit_queue" method="post">
+            {% module xsrf_form_html() %}
+            <ul>
+                <li>
+                    <label for="testQueue">TestQueue:</label>
+                    <input type="text" name="testQueue" id="testQueue" placeholder="注册流程各种测试" required/>
+                    <button class="submit" type="submit">Submit</button>
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>
+<div class="theme-popover-mask"></div>
+{% end %}
+
+{% block bottom %}
+<script type="text/javascript">
+    $.ajaxSetup({
+        beforeSend: function(jqXHR, settings) {
+            type = settings.type
+            if (type != 'GET' && type != 'HEAD' && type != 'OPTIONS') {
+                var pattern = /(.+; *)?_xsrf *= *([^;" ]+)/;
+                var xsrf = pattern.exec(document.cookie);
+                if (xsrf) {
+                    jqXHR.setRequestHeader('X-Xsrftoken', xsrf[2]);
+                }
+            }
+    }});
+
+    jQuery(document).ready(function($) {
+        form_num = 1;
+
+        $('#add_domain').click(function(){
+            $('.theme-popover-mask').fadeIn(100);
+            $('#create_domain').slideDown(200);
+        })
+        $('#domain_close').click(function(){
+            $('.theme-popover-mask').fadeOut(100);
+            $('#create_domain').slideUp(200);
+        })
+
+        $('#add_queue').click(function(){
+            $('.theme-popover-mask').fadeIn(100);
+            $('#create_queue').slideDown(200);
+        })
+        $('#queue_close').click(function(){
+            $('.theme-popover-mask').fadeOut(100);
+            $('#create_queue').slideUp(200);
+        })
+
+        $("#forms").click(function(){
+            if(this.checked){
+                $("#add_form_info").css("display", "block");
+            }else{
+                $("#add_form_info").css("display", "none");
+            }
+        })
+
+        $("#add_tester_form").click(function(){
+            if($("#forms").is(":checked")){
+                $("#form_tester").clone(true).attr("id", "form_tester" + form_num++).appendTo("#add_form_info");
+            }
+        })
+
+        $(".add_element").click(function(){
+            $(this).parent().next().clone(true).appendTo($(this).parent().parent());
+        })
+
+        $("#submit_tester").click(function(){
+            var forms;
+            if($("#forms").is(":checked")){
+                forms = new Array();
+                $("input[name='testName']").each(
+                    function(){
+                        if($(this).val() == ""){
+                            alert("testName can't be Null")
+                        }
+                        var form = new Object();
+                        form.testName = $(this).val()
+                        form.params = new Object();
+                        $(this).parent().parent().children(":gt(0)").each(
+                            function(){
+                                form.params[$(this).children("input")[0].value] = $(this).children("input")[1].value;
+                            }
+                        )
+                        forms.push(form)
+                    }
+                )
+            }
+
+            tester_val = {
+                queueId: $("#queue_select").val(),
+                urlPath: $("#urlPath").val(),
+                forms: forms,
+                elType: $("#elType").val(),
+                elValue: $("#elValue").val(),
+                action: $("#action_select").val()
+            }
+
+            $.ajax({
+                type : 'POST',
+                contentType : 'application/json',
+                url : 'add_tester',
+                data: JSON.stringify(tester_val),
+                dataType : 'text',
+                async : false,
+                success : function(data) {
+                    alert("success")
+                },
+                error : function() {
+                    alert("Error")
+                }
+            });
+
+            return false;
+        })
+    })
+</script>
+{% end %}

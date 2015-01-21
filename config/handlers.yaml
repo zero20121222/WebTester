@@ -1,0 +1,17 @@
+summary.services.home_handler.HomeHandler:
+  url: '/'
+
+summary.services.home_handler.EditHandler:
+  url: '/edit_tester'
+
+summary.services.domain_handler.DomainHandler:
+  url: '/edit_domain'
+
+summary.services.queue_handler.QueueHandler:
+  url: '/edit_queue'
+
+summary.services.action_handler.ActionHandler:
+  url: '/add_tester'
+
+summary.services.tester_handler.TesterHandler:
+  url: '/api/tester_deal'

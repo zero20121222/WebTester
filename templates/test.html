@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑测试表单信息</title>
+    <link rel="stylesheet" href="{{ static_url('basic_des.css') }}" type="text/css"/>
+    <style>
+        .contact_form{padding-top:40px;}
+    </style>
+</head>
+<body>
+<div align="center">
+    <table border="1" width="47%" height="250" style="border-width: 0px">
+        <tr>
+            <td style="border-style: none; border-width: medium">　
+                <form class="contact_form" action="#" method="post" name="contact_form">
+                    <ul>
+                        <li>
+                            <h2>联系我们</h2>
+                            <span class="required_notification">* 表示必填项</span>
+                        </li>
+                        <li>
+                            <label for="name">姓名:</label>
+                            <input type="text"  placeholder="Chinaz" required />
+                        </li>
+                        <li>
+                            <label for="email">电子邮件:</label>
+                            <input type="email" name="email" placeholder="123456@qq.com" required />
+                            <span class="form_hint">正确格式为：123456@qq.com</span>
+                        </li>
+                        <li>
+                            <label for="website">网站:</label>
+                            <input type="url" name="website" placeholder="http://www.baidu.com" required pattern="(http|https)://.+"/>
+                            <span class="form_hint">正确格式为：http://www.baidu.com</span>
+                        </li>
+                        <li>
+                            <label for="message">留言:</label>
+                            <textarea name="message" cols="40" rows="6" placeholder="jquery" required ></textarea>
+                        </li>
+                        <li>
+                            <button class="submit" type="submit">Submit Form</button>
+                        </li>
+                    </ul>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

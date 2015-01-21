@@ -1,0 +1,367 @@
+body {
+  background: white;
+  margin: 15px;
+  margin-top: 0;
+  font-size:12px;
+  font-family:microsoft yahei;
+  color: #444;
+}
+
+table {
+  border-collapse: collapse;
+  border: 0;
+}
+
+tr{
+  height:30px;
+}
+
+td {
+  border: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Helvetica Nue", Helvetica, Arial, sans-serif;
+  margin: 0;
+}
+
+h1 {
+  font-size: 20pt;
+}
+
+pre,
+code {
+  font-family: monospace;
+  color: #060;
+}
+
+pre {
+  margin-left: 1em;
+  padding-left: 1em;
+  border-left: 1px solid silver;
+  line-height: 14pt;
+}
+
+a,
+a code {
+  color: #00c;
+  cursor: pointer;
+}
+
+#body {
+  max-width: 900px;
+  margin: auto;
+}
+
+#header {
+  background-color: #3b5998;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-bottom: 1em;
+}
+
+#header,
+#header a {
+  color: white;
+}
+
+#header h1 a {
+  text-decoration: none;
+}
+
+#footer,
+#content {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#footer {
+  margin-top: 3em;
+}
+
+.entry h1 a {
+  color: black;
+  text-decoration: none;
+}
+
+.entry {
+  margin-bottom: 2em;
+}
+
+.entry .date {
+  margin-top: 3px;
+}
+
+.entry p {
+  margin: 0;
+  margin-bottom: 1em;
+}
+
+.entry .body {
+  margin-top: 1em;
+  line-height: 16pt;
+}
+
+.compose td {
+  vertical-align: middle;
+  padding-bottom: 5px;
+}
+
+.compose td.field {
+  padding-right: 10px;
+}
+
+.compose .title,
+.compose .submit {
+  font-family: "Helvetica Nue", Helvetica, Arial, sans-serif;
+  font-weight: bold;
+}
+
+.compose .title {
+  font-size: 20pt;
+}
+
+.compose .title,
+.compose .markdown {
+  width: 100%;
+}
+
+.compose .markdown {
+  height: 500px;
+  line-height: 16pt;
+}
+
+.test_form {
+    border:2px solid;
+    border-radius:25px;
+    padding:20px;
+    margin:20px;
+    box-shadow: 3px 3px 1px #888888;
+}
+
+
+/* === Remove input autofocus webkit === */
+*:focus {outline: none;}
+
+/* === Form Typography === */
+.contact_form h2, .contact_form label {font-family:Georgia, Times, "Times New Roman", serif;}
+
+/* === List Styles === */
+.contact_form ul {
+    width:100%;
+    list-style-type:none;
+	list-style-position:outside;
+	margin:0px;
+	padding:0px;
+}
+.contact_form li{
+	padding:12px;
+	border-bottom:1px solid #eee;
+	position:relative;
+}
+.contact_form li:last-child {
+    margin-bottom:10px;
+	border-bottom:1px solid #777;
+}
+
+/* === Form Header === */
+.contact_form h2 {
+	margin:0;
+	display: inline;
+}
+.required_notification {
+	color:#d45252;
+	margin:5px 0 0 0;
+	display:inline;
+	float:right;
+
+}
+
+/* === Form Elements === */
+.contact_form label {
+	width:80px;
+	height:25px;
+	margin-top: 3px;
+	display:inline-block;
+	padding:3px;
+}
+.contact_form input {
+	height:20px;
+	width:180px;
+	padding:5px 8px;
+}
+.contact_form textarea {padding:8px; width:300px;}
+.contact_form button {margin-left:156px;}
+
+/* form element visual styles */
+.contact_form input, .contact_form textarea {
+    border:1px solid #aaa;
+    box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
+    border-radius:2px;
+    padding-right:30px;
+    -moz-transition: padding .25s;
+    -webkit-transition: padding .25s;
+    -o-transition: padding .25s;
+    transition: padding .25s;
+}
+.contact_form input:focus, .contact_form textarea:focus {
+    background: #fff;
+    border:1px solid #555;
+    box-shadow: 0 0 3px #aaa;
+    padding-right:70px;
+}
+
+/* === HTML5 validation styles === */
+.contact_form input:required, .contact_form textarea:required {
+	background: #fff url(images/red_asterisk.png) no-repeat 98% center;
+}
+.contact_form input:required:valid, .contact_form textarea:required:valid {
+	background: #fff url(images/valid.png) no-repeat 98% center;
+	box-shadow: 0 0 5px #5cd053;
+	border-color: #28921f;
+}
+.contact_form input:focus:invalid, .contact_form textarea:focus:invalid {
+	background: #fff url(images/invalid.png) no-repeat 98% center;
+	box-shadow: 0 0 5px #d45252;
+	border-color: #b03535
+}
+
+/* === Button Style === */
+button.submit {
+	background-color: #68b12f;
+	background: -webkit-gradient(linear, left top, left bottom, from(#68b12f), to(#50911e));
+	background: -webkit-linear-gradient(top, #68b12f, #50911e);
+	background: -moz-linear-gradient(top, #68b12f, #50911e);
+	background: -ms-linear-gradient(top, #68b12f, #50911e);
+	background: -o-linear-gradient(top, #68b12f, #50911e);
+	background: linear-gradient(top, #68b12f, #50911e);
+	border: 1px solid #509111;
+	border-bottom: 1px solid #5b992b;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-ms-border-radius: 3px;
+	-o-border-radius: 3px;
+	box-shadow: inset 0 1px 0 0 #9fd574;
+	-webkit-box-shadow: 0 1px 0 0 #9fd574 inset ;
+	-moz-box-shadow: 0 1px 0 0 #9fd574 inset;
+	-ms-box-shadow: 0 1px 0 0 #9fd574 inset;
+	-o-box-shadow: 0 1px 0 0 #9fd574 inset;
+	color: white;
+	font-weight: bold;
+	padding: 6px 20px;
+	text-align: center;
+	text-shadow: 0 -1px 0 #396715;
+}
+button.submit:hover {
+	opacity:.85;
+	cursor: pointer;
+}
+button.submit:active {
+	border: 1px solid #20911e;
+	box-shadow: 0 0 10px 5px #356b0b inset;
+	-webkit-box-shadow:0 0 10px 5px #356b0b inset ;
+	-moz-box-shadow: 0 0 10px 5px #356b0b inset;
+	-ms-box-shadow: 0 0 10px 5px #356b0b inset;
+	-o-box-shadow: 0 0 10px 5px #356b0b inset;
+
+}
+
+
+.theme-popover-mask {
+	z-index: 9998;
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background:#000;
+	opacity:0.4;
+	filter:alpha(opacity=40);
+	display:none
+}
+.theme-popover {
+	z-index:9999;
+	position:fixed;
+	top:50%;
+	left:50%;
+	width:760px;
+	height:160px;
+	margin:-180px 0 0 -360px;
+	border-radius:5px;
+	border:solid 2px #666;
+	background-color:#fff;
+	display:none;
+	box-shadow: 0 0 10px #666;
+}
+.theme-poptit {
+	border-bottom:1px solid #ddd;
+	padding:12px;
+	position: relative;
+}
+.theme-popbod {
+	padding:60px 15px;
+	color:#444;
+	height: 148px;
+}
+.theme-popbom {
+	padding:15px;
+	background-color:#f6f6f6;
+	border-top:1px solid #ddd;
+	border-radius:0 0 5px 5px;
+	color:#666
+}
+.theme-popbom a {
+	margin-left:8px
+}
+.theme-poptit .close {
+	float:right;
+	color:#999;
+	padding:5px;
+	margin:-2px -5px -5px;
+	font:bold 14px/14px simsun;
+	text-shadow:0 1px 0 #ddd
+}
+.theme-poptit .close:hover {
+	color:#444;
+}
+.dform {
+	padding:20px 60px 40px;
+	text-align: center;
+}
+.dform .ipt_error {
+	background-color:#FFFFCC;
+	border-color:#FFCC66
+}
+
+/* === Form hints === */
+.form_hint {
+	background: #d45252;
+	border-radius: 3px 3px 3px 3px;
+	color: white;
+	margin-left:8px;
+	padding: 1px 6px;
+	z-index: 999; /* hints stay above all other elements */
+	position: absolute; /* allows proper formatting if hint is two lines */
+	display: none;
+}
+.form_hint::before {
+	content: "\25C0";
+	color:#d45252;
+	position: absolute;
+	top:1px;
+	left:-6px;
+}
+.contact_form input:focus + .form_hint {display: inline;}
+.contact_form input:required:valid + .form_hint {background: #28921f;}
+.contact_form input:required:valid + .form_hint::before {color:#28921f;}
+
+.add_element{
+    float:right;
+    line-height:30px
+}

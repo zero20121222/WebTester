@@ -1,0 +1,20 @@
+common: &common
+  database: mz_tester
+  host: 127.0.0.1
+  port: 3306
+  minCached: 20
+  maxCached: 10
+  maxShared: 20
+  maxConnections: 50
+  blocking: False
+
+local:
+  <<: *common
+  user: root
+  password: root
+
+prod:
+  <<: *common
+  host: 192.168.1.15
+  user: root
+  password: root

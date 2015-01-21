@@ -1,0 +1,10 @@
+---
+local:
+  port: 6379
+
+prod:
+  port: 6379
+  host: 127.0.0.1
+
+unit:
+  port: 6379
