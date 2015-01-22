@@ -14,8 +14,6 @@ from summary.modules.test_action import EL_TYPE, ACTION_TYPE
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
-output = lambda desc: desc.encode("utf-8")
-
 class TestEngine(object):
     __browser = None
 
@@ -37,27 +35,13 @@ class TestEngine(object):
 
         if action_obj.forms is not None:
             for form in json.loads(action_obj.forms):
-                output(form["testName"])
                 for el_key, el_val in form["params"].items():
                     self.browser.fill(el_key, el_val.decode("utf-8"))
-                    sleep(1)
+                    sleep(2)
 
-        action_type = ACTION_TYPE.value(action_obj.action)
+                self.__deal_action(action_obj)
 
-        if action_type == "click":
-            self.__event_element(action_obj.elType, action_obj.elValue).first.click()
-        elif action_type == "double click":
-            self.__event_element(action_obj.elType, action_obj.elValue).first.double_click()
-        elif action_type == "right click":
-            self.__event_element(action_obj.elType, action_obj.elValue).first.right_click()
-        elif action_type == "mouse over":
-            self.__event_element(action_obj.elType, action_obj.elValue).first.mouse_over()
-        elif action_type == "mouse out":
-            self.__event_element(action_obj.elType, action_obj.elValue).first.mouse_out()
-        elif action_type == "select":
-            self.__event_element(action_obj.elType, action_obj.elValue).first.select()
-        else:
-            print "don't find action for actionId:%s", action_obj.actionId
+
 
     def __test_list(self, domain, action_list):
         for action in action_list:
@@ -80,3 +64,22 @@ class TestEngine(object):
             return self.browser.find_by_css(el_value)
         else:
             raise ValueError("Test Engine can't deal the element type:%s, el_type:%s", ele_type, el_type)
+
+    def __deal_action(self, action_obj):
+        action_type = ACTION_TYPE.value(action_obj.action)
+
+        if action_type == "click":
+            self.__event_element(action_obj.elType, action_obj.elValue).first.click()
+        elif action_type == "double click":
+            self.__event_element(action_obj.elType, action_obj.elValue).first.double_click()
+        elif action_type == "right click":
+            self.__event_element(action_obj.elType, action_obj.elValue).first.right_click()
+        elif action_type == "mouse over":
+            self.__event_element(action_obj.elType, action_obj.elValue).first.mouse_over()
+        elif action_type == "mouse out":
+            self.__event_element(action_obj.elType, action_obj.elValue).first.mouse_out()
+        elif action_type == "select":
+            self.__event_element(action_obj.elType, action_obj.elValue).first.select()
+        else:
+            print "don't find action for actionId:%s", action_obj.actionId
+        sleep(2)

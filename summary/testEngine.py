@@ -1,5 +1,7 @@
 # coding=utf-8
 # Date=1/14/15
+from time import sleep
+
 __author__ = 'MichaelZhao'
 
 # coding=utf-8
@@ -40,7 +42,7 @@ class TestEngine(object):
                 password:"",
             }]
             '''
-            self.testLogin('测试未输入用户名', '', '', '请输入会员名')
+            self.testLogin('测试未输入用户名', '', '', '企业互惠')
             self.testLogin('测试未输入密码', 'qd_test_001', '', '请输入密码')
             self.testLogin('测试帐户不存在', '这是一个不存在的名字哦', 'xxxxxxx', '该账户名不存在')
             # 校验登入是否成功
@@ -54,4 +56,6 @@ class TestEngine(object):
         TestEngine.__browser.fill("loginBy", userName.decode("utf-8"))
         TestEngine.__browser.fill("password", passwd.decode("utf-8"))
         TestEngine.__browser.find_by_id("login-submit").first.click()
-        print "is_text_present:", TestEngine.__browser.is_text_present(result)
+        sleep(2)
+
+TestEngine().test()
