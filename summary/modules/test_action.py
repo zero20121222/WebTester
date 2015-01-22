@@ -3,7 +3,6 @@
 __author__ = 'MichaelZhao'
 
 from summary.modules.basic_module import BasicModule
-from app.lib.units import Enum
 
 '''
 --
@@ -35,8 +34,4 @@ class TestAction(BasicModule):
         self.createdAt = None
         self.updatedAt = None
         BasicModule.__init__(self, dict_list, deep_split)
-
-EL_TYPE = Enum({"1": "id", "2": "name", "3": "tag", "4": "value", "5": "selector", "6": "css"})
-
-ACTION_TYPE = Enum({"1": "click", "2": "double click", "3": "right click", "4": "mouse over", "5": "mouse out", "6": "select"})
 

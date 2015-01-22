@@ -1,0 +1,4 @@
+local:
+    sleep_time: 2
+    web_driver:
+        [Chrome WebDriver, Firefox WebDriver]

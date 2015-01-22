@@ -9,16 +9,21 @@ import json
 import threading
 from time import sleep
 from splinter.browser import Browser
-from summary.modules.test_action import EL_TYPE, ACTION_TYPE
+from app.lib.helper import Objects
+from summary.modules.el_enum import EL_TYPE, ACTION_TYPE
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
 class TestEngine(object):
-    __browser = None
+    __sleep_time = None
 
     def __init__(self, browser_name):
         self.browser = Browser(browser_name)
+
+    @staticmethod
+    def set_config(config):
+        TestEngine.__sleep_time = Objects.first_not_null(config.get("sleep_time"), 2)
 
     def test_list_acts(self, domain, action_list):
         thread_deal = threading.Thread(target=self.__test_list, args=(domain, action_list), name="TestEngine deal tester")
@@ -36,7 +41,7 @@ class TestEngine(object):
             for form in json.loads(action_obj.forms):
                 for el_key, el_val in form["params"].items():
                     self.browser.fill(el_key, el_val.decode("utf-8"))
-                    sleep(2)
+                    sleep(TestEngine.__sleep_time)
 
                 self.__deal_action(action_obj)
 
@@ -81,4 +86,4 @@ class TestEngine(object):
             self.__event_element(action_obj.elType, action_obj.elValue).first.select()
         else:
             print "don't find action for actionId:%s", action_obj.actionId
-        sleep(2)
+        sleep(TestEngine.__sleep_time)

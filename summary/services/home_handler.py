@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 # -*- encoding: utf8 -*-
-import json
 
 __author__ = 'MichaelZhao'
 
@@ -8,9 +7,10 @@ from app.lib.basic_handler import BasicHandler
 from summary.daos.domain_dao import DomainDao
 from summary.daos.queue_dao import QueueDao
 from summary.daos.action_dao import ActionDao
-from summary.modules.test_action import TestAction, EL_TYPE, ACTION_TYPE
+from summary.modules.test_action import TestAction
 from summary.modules.test_domain import TestDomain
 from summary.modules.test_queue import TestQueue
+from summary.modules.el_enum import EL_TYPE, ACTION_TYPE
 
 class HomeHandler(BasicHandler):
     def get(self):
