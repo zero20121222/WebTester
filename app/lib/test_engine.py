@@ -19,7 +19,6 @@ class TestEngine(object):
 
     def __init__(self, browser_name):
         self.browser = Browser(browser_name)
-        threading.Thread()
 
     def test_list_acts(self, domain, action_list):
         thread_deal = threading.Thread(target=self.__test_list, args=(domain, action_list), name="TestEngine deal tester")
