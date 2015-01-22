@@ -15,6 +15,6 @@ local:
 
 prod:
   <<: *common
-  host: 192.168.1.15
+  host: 127.0.0.1
   user: root
   password: root
