@@ -9,8 +9,8 @@ class ActionDao(object):
     def __init__(self):
         pass
 
-    @sql_mapping(sql="insert into test_actions(queue_id, test_num, url_path, forms, action_list, sleep_time, created_at, updated_at) values(%s, %s, %s, %s, %s, %s, now(), now())", method="create")
-    def create(self, queueId, testNum, urlPath, forms, actionList, sleepTime):
+    @sql_mapping(sql="insert into test_actions(queue_id, test_num, url_path, forms, action_list, sleep_time, wait_close, created_at, updated_at) values(%s, %s, %s, %s, %s, %s, %s, now(), now())", method="create")
+    def create(self, queueId, testNum, urlPath, forms, actionList, sleepTime, waitClose):
         pass
 
     @sql_mapping(sql="select * from test_actions where id=%s", method="query")

@@ -30,12 +30,34 @@ class TestEngine(object):
         TestEngine.__mouse_over_sleep = Objects.first_not_null(config.get("mouse_over_sleep"), 1)
 
     def test_list_acts(self, domain, action_list):
-        thread_deal = threading.Thread(target=self.__test_list, args=(domain, action_list), name="TestEngine deal tester")
+        thread_deal = threading.Thread(target=self.__test_list_thread, args=(domain, action_list), name="TestEngine deal tester")
         thread_deal.start()
 
     def test_deal(self, domain, action_obj):
-        thread_deal = threading.Thread(target=self.__test_do, args=(domain, action_obj), name="TestEngine deal tester")
+        thread_deal = threading.Thread(target=self.__test_do_thread, args=(domain, action_obj), name="TestEngine deal tester")
         thread_deal.start()
+
+
+    def __test_list_thread(self, domain, action_list):
+        try:
+            for action in action_list:
+                self.__test_do(domain, action)
+        except Exception as e:
+            print "[Error code] deal test list failed, error code=", e
+        finally:
+            sleep(action_list[0].waitClose)
+            self.browser.quit()
+
+
+    def __test_do_thread(self, domain, action_obj):
+        try:
+            self.__test_do(domain, action_obj)
+        except Exception as e:
+            print "[Error code] deal test failed, error code=", e
+        finally:
+            sleep(action_obj.waitClose)
+            self.browser.quit()
+
 
     def __test_do(self, domain, action_obj):
         test_url = domain+action_obj.urlPath
@@ -51,18 +73,15 @@ class TestEngine(object):
                     sleep(TestEngine.__sleep_time)
 
                 self.__deal_action(form_action["action"], form_action["elType"], form_action["elValue"])
+                sleep(action_obj.sleepTime)
 
             for action_deal in action_list[1:]:
                 self.__deal_action(action_deal["action"], action_deal["elType"], action_deal["elValue"])
+                sleep(action_obj.sleepTime)
         else:
             for action_deal in action_list:
                 self.__deal_action(action_deal["action"], action_deal["elType"], action_deal["elValue"])
-
-
-
-    def __test_list(self, domain, action_list):
-        for action in action_list:
-            self.__test_do(domain, action)
+                sleep(action_obj.sleepTime)
 
 
     def __set_value(self, form_type, el_name, el_value):
@@ -122,8 +141,6 @@ class TestEngine(object):
             self.__event_element(el_type, el_value).first.select()
         else:
             print "don't find action for action:%s", action
-
-        sleep(4)
 
 
     def __mouse_of_click(self, event_deal_obj):

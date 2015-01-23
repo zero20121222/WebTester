@@ -21,5 +21,6 @@ summary.modules.test_action.TestAction:
             forms: forms
             action_list: actionList
             sleep_time: sleepTime
+            wait_close: waitClose
             created_at: createdAt
             updated_at: updatedAt

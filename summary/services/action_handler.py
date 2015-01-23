@@ -22,6 +22,6 @@ class ActionHandler(BasicHandler):
             test_num = int(action_list[0]["testNum"]) + 1
 
         action_id = action_dao.create(test_action.queueId, test_num, test_action.urlPath, JsonHelper.dumps(test_action.forms),
-                                      JsonHelper.dumps(test_action.actionList), test_action.sleepTime)
+                                      JsonHelper.dumps(test_action.actionList), test_action.sleepTime, test_action.waitClose)
 
         print action_id
