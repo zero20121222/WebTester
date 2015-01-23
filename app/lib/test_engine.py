@@ -94,7 +94,7 @@ class TestEngine(object):
         elif form_type == 4:
             self.browser.attach_file(el_name, el_value)
         elif form_type == 5:
-            if el_value:
+            if bool(el_value):
                 self.browser.check(el_name)
             else:
                 self.browser.uncheck(el_name)

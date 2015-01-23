@@ -219,7 +219,12 @@
                                 var param = new Object();
                                 param["formType"] = $(this).children("select")[0].value;
                                 param["formElName"] = $(this).children("input")[0].value;
-                                param["formElValue"] = $(this).children("input")[1].value;
+
+                                if($(this).children("input")[1].type == "checkbox"){
+                                    param["formElValue"] = $(this).children("input")[1].checked;
+                                }else{
+                                    param["formElValue"] = $(this).children("input")[1].value;
+                                }
 
                                 form.params.push(param);
                             }
@@ -251,6 +256,7 @@
                 actionList: action_list
             }
 
+            alert(JSON.stringify(tester_val))
             $.ajax({
                 type : 'POST',
                 contentType : 'application/json',
