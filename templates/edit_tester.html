@@ -25,10 +25,11 @@
                 <br>
                 <label for="urlPath">Url Path:</label>
                 <input type="text" name="urlPath" id="urlPath" placeholder="/login" required/><br>
+                <label for="sleepTime">Sleep Time:</label>
+                <input style="width:15px" type="text" name="sleepTime" id="sleepTime" placeholder="2" required/>&nbsp;s<br>
                 <label for="forms">Forms:</label>
                 <input id="forms" name="forms" style="width:15px;height:15px" type="checkbox"/>
-                <a id="add_tester_form" style="float:right;display:inline;">Add Tester</a>
-                <hr>
+                <a id="add_tester_form" style="float:right;line-height:35px;">Add Tester</a><hr>
                 <div id="add_form_info" style="display:none">
                     <ul id="form_tester">
                         <li>
@@ -44,27 +45,33 @@
                         </li>
                     </ul>
                 </div>
-                <label for="elType">El Type:</label>
-                <select id="elType">
-                    <option value="1">id</option>
-                    <option value="2">name</option>
-                    <option value="3">tag</option>
-                    <option value="4">value</option>
-                    <option value="5">selector</option>
-                    <option value="6">css</option>
-                </select>
-                <label style="margin-left:100px" for="elValue">El Value:</label>
-                <input type="text" name="elValue" id="elValue" placeholder="login-submit" required/><br>
-                <label for="action_select">Action:</label>
-                <select id="action_select">
-                    <option value="1">click</option>
-                    <option value="2">double click</option>
-                    <option value="3">right click</option>
-                    <option value="4">mouse over</option>
-                    <option value="5">mouse out</option>
-                    <option value="6">select</option>
-                </select><br>
-                <hr>
+                <label>Actions:</label><a id="add_new_action" style="float:right;line-height:35px;">Add Action</a><hr>
+                <div id="add_action_info">
+                    <ul class="action_info" id="action_info">
+                        <li>
+                            <label style="width:50px">El Type:</label>
+                            <select name="elType">
+                                <option value="1">id</option>
+                                <option value="2">name</option>
+                                <option value="3">tag</option>
+                                <option value="4">value</option>
+                                <option value="5">selector</option>
+                                <option value="6">css</option>
+                            </select>
+                            <label style="width:60px;margin-left:80px">El Value:</label>
+                            <input type="text" name="elValue" placeholder="login-submit" required/>
+                            <label style="width:50px;margin-left:40px">Action:</label>
+                            <select name="action_select">
+                                <option value="1">click</option>
+                                <option value="2">double click</option>
+                                <option value="3">right click</option>
+                                <option value="4">mouse over</option>
+                                <option value="5">mouse out</option>
+                                <option value="6">select</option>
+                            </select>
+                        </li>
+                    </ul>
+                </div>
                 <button id="submit_tester" class="submit">Submit</button>
             </form>
         </div>
@@ -127,6 +134,7 @@
 
     jQuery(document).ready(function($) {
         form_num = 1;
+        action_num = 1;
 
         $('#add_domain').click(function(){
             $('.theme-popover-mask').fadeIn(100);
@@ -164,6 +172,10 @@
             $(this).parent().next().clone(true).appendTo($(this).parent().parent());
         })
 
+        $("#add_new_action").click(function(){
+            $("#action_info").clone(true).attr("id", "action_info" + action_num++).appendTo("#add_action_info");
+        })
+
         $("#submit_tester").click(function(){
             var forms;
             if($("#forms").is(":checked")){
@@ -186,13 +198,25 @@
                 )
             }
 
+            var action_list= new Array();
+            $(".action_info").each(
+                function(){
+                    li_child = $(this).children("li");
+
+                    action_obj = new Object();
+                    action_obj.elType = li_child.children("[name=elType]").val();
+                    action_obj.elValue = li_child.children("[name=elValue]").val();
+                    action_obj.action = li_child.children("[name=action_select]").val();
+                    action_list.push(action_obj);
+                }
+            )
+
             tester_val = {
                 queueId: $("#queue_select").val(),
                 urlPath: $("#urlPath").val(),
+                sleepTime: $("#sleepTime").val(),
                 forms: forms,
-                elType: $("#elType").val(),
-                elValue: $("#elValue").val(),
-                action: $("#action_select").val()
+                actionList: action_list
             }
 
             $.ajax({

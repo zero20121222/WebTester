@@ -17,6 +17,8 @@ sys.setdefaultencoding("utf-8")
 
 class TestEngine(object):
     __sleep_time = None
+    __mouse_over = None
+    __mouse_over_sleep = None
 
     def __init__(self, browser_name):
         self.browser = Browser(browser_name)
@@ -24,6 +26,8 @@ class TestEngine(object):
     @staticmethod
     def set_config(config):
         TestEngine.__sleep_time = Objects.first_not_null(config.get("sleep_time"), 2)
+        TestEngine.__mouse_over = Objects.first_not_null(config.get("mouse_over"), True)
+        TestEngine.__mouse_over_sleep = Objects.first_not_null(config.get("mouse_over_sleep"), 1)
 
     def test_list_acts(self, domain, action_list):
         thread_deal = threading.Thread(target=self.__test_list, args=(domain, action_list), name="TestEngine deal tester")
@@ -37,15 +41,21 @@ class TestEngine(object):
         test_url = domain+action_obj.urlPath
         self.browser.visit(test_url)
 
+        # form表单默认为第一个action循环测试，之后的action按照顺序执行
+        action_list = json.loads(action_obj.actionList)
         if action_obj.forms is not None:
+            form_action = action_list[0]
             for form in json.loads(action_obj.forms):
                 for el_key, el_val in form["params"].items():
                     self.browser.fill(el_key, el_val.decode("utf-8"))
                     sleep(TestEngine.__sleep_time)
+                self.__deal_action(form_action["action"], form_action["elType"], form_action["elValue"])
 
-                self.__deal_action(action_obj)
+            for action_deal in action_list[1:]:
+                self.__deal_action(action_deal["action"], action_deal["elType"], action_deal["elValue"])
         else:
-            self.__deal_action(action_obj)
+            for action_deal in action_list:
+                self.__deal_action(action_deal["action"], action_deal["elType"], action_deal["elValue"])
 
 
 
@@ -71,21 +81,49 @@ class TestEngine(object):
         else:
             raise ValueError("Test Engine can't deal the element type:%s, el_type:%s", ele_type, el_type)
 
-    def __deal_action(self, action_obj):
-        action_type = ACTION_TYPE.value(action_obj.action)
+    def __deal_action(self, action, el_type, el_value):
+        action_type = ACTION_TYPE.value(action)
+
+        # 当页面跳转是抓取最后一个打开的窗口页面
+        self.browser.windows.current = self.browser.windows[-1]
 
         if action_type == "click":
-            self.__event_element(action_obj.elType, action_obj.elValue).first.click()
+            self.__mouse_of_click(self.__event_element(el_type, el_value).first)
         elif action_type == "double click":
-            self.__event_element(action_obj.elType, action_obj.elValue).first.double_click()
+            self.__mouse_of_double_click(self.__event_element(el_type, el_value).first)
         elif action_type == "right click":
-            self.__event_element(action_obj.elType, action_obj.elValue).first.right_click()
+            self.__mouse_of_right_click(self.__event_element(el_type, el_value).first)
         elif action_type == "mouse over":
-            self.__event_element(action_obj.elType, action_obj.elValue).first.mouse_over()
+            self.__event_element(el_type, el_value).first.mouse_over()
         elif action_type == "mouse out":
-            self.__event_element(action_obj.elType, action_obj.elValue).first.mouse_out()
+            self.__event_element(el_type, el_value).first.mouse_out()
         elif action_type == "select":
-            self.__event_element(action_obj.elType, action_obj.elValue).first.select()
+            self.__event_element(el_type, el_value).first.select()
         else:
-            print "don't find action for actionId:%s", action_obj.actionId
-        sleep(TestEngine.__sleep_time)
+            print "don't find action for action:%s", action
+
+        sleep(4)
+
+    def __mouse_of_click(self, event_deal_obj):
+        if TestEngine.__mouse_over:
+            event_deal_obj.mouse_over()
+            sleep(TestEngine.__mouse_over_sleep)
+            event_deal_obj.click()
+        else:
+            event_deal_obj.click()
+
+    def __mouse_of_right_click(self, event_deal_obj):
+        if TestEngine.__mouse_over:
+            event_deal_obj.mouse_over()
+            sleep(TestEngine.__mouse_over_sleep)
+            event_deal_obj.right_click()
+        else:
+            event_deal_obj.click()
+
+    def __mouse_of_double_click(self, event_deal_obj):
+        if TestEngine.__mouse_over:
+            event_deal_obj.mouse_over()
+            sleep(TestEngine.__mouse_over_sleep)
+            event_deal_obj.double_click()
+        else:
+            event_deal_obj.click()

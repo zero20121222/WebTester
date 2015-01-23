@@ -19,8 +19,7 @@ summary.modules.test_action.TestAction:
             test_num: testNum
             url_path: urlPath
             forms: forms
-            el_type: elType
-            el_value: elValue
-            action: action
+            action_list: actionList
+            sleep_time: sleepTime
             created_at: createdAt
             updated_at: updatedAt

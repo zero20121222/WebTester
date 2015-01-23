@@ -42,11 +42,11 @@ class EditHandler(BasicHandler):
         queue_list = queue_dao.query_all()
         queue_values = TestQueue().to_orm(queue_list, dict_v=False)
 
-        action_dao = ActionDao()
-        action_list = action_dao.query_by_queue_id(queue_values[0].id)
-        action_values = TestAction().to_orm(action_list)
+        # action_dao = ActionDao()
+        # action_list = action_dao.query_by_queue_id(queue_values[0].id)
+        # action_values = TestAction().to_orm(action_list)
 
-        self.render("edit_tester.html", domain_values=domain_values, queue_values=queue_values, action_values=action_values)
+        self.render("edit_tester.html", domain_values=domain_values, queue_values=queue_values)
 
     def post(self, *args, **kwargs):
         pass

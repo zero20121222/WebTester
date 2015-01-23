@@ -25,11 +25,10 @@
                 <td>all<input type="checkbox"/></td>
                 <td>Test Num</td>
                 <td>Url Path</td>
-                <td>EL Type</td>
-                <td>EL Value</td>
-                <td>Action</td>
+                <td>Action List</td>
                 <td>Form Tests</td>
                 <td>Param Num</td>
+                <td>Sleep Time</td>
                 <td>Detail</td>
             </tr>
             {% for action_val in action_values%}
@@ -37,9 +36,7 @@
                 <td><input type="checkbox"/></td>
                 <td>{{action_val.testNum}}</td>
                 <td>{{action_val.urlPath}}</td>
-                <td>{{EL_TYPE.value(action_val.elType)}}</td>
-                <td>{{action_val.elValue}}</td>
-                <td>{{ACTION_TYPE.value(action_val.action)}}</td>
+                <td>{{len(json_dict(action_val.actionList)) if action_val.actionList is not None else 0}}</td>
                 {% if action_val.forms is not None and len(json_dict(action_val.forms)) > 0 %}
                     <td>{{len(json_dict(action_val.forms))}}</td>
                     <td>{{len(json_dict(action_val.forms)[0]["params"])}}</td>
@@ -47,6 +44,7 @@
                     <td>0</td>
                     <td>0</td>
                 {% end %}
+                <td>{{action_val.sleepTime}}&nbsp;s</td>
                 <td><a>detail</a></td>
             </tr>
             {% end %}
