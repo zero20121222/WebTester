@@ -18,7 +18,7 @@ class ActionDao(object):
         if not isinstance(id, int):
             raise ValueError("query failed error code id Integer, id:%s", id)
 
-    @sql_mapping(sql="select * from test_actions where queue_id=%s", method="query")
+    @sql_mapping(sql="select * from test_actions where queue_id=%s order by test_num", method="query")
     def query_by_queue_id(self, queue_id):
         pass
 
@@ -26,6 +26,6 @@ class ActionDao(object):
     def query_max_num(self, queue_id):
         pass
 
-    @sql_mapping(sql="select * from test_actions where queue_id=%s and test_num in (?)", method="query")
+    @sql_mapping(sql="select * from test_actions where queue_id=%s and test_num in (?) order by test_num", method="query")
     def query_by_nums(self, queue_id, test_num):
         pass

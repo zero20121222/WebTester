@@ -44,6 +44,8 @@ class TestEngine(object):
                     sleep(TestEngine.__sleep_time)
 
                 self.__deal_action(action_obj)
+        else:
+            self.__deal_action(action_obj)
 
 
 

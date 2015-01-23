@@ -69,6 +69,8 @@ class EditTesterHandler(RequestHandler):
                     "password":"123456",
                 }}]
 
+        action_form=[]
+
         domain_val = {"id":1, "domain":"www.daqihui.cn", "createdAt":"2014-10-10", "updatedAt":"2014-11-10"}
         queue_val = {"id":1, "queueName":"测试登入", "createdAt":"2014-10-10", "updatedAt":"2014-11-10"}
         action_val = {"id":1, "queueId":1, "testNum":1, "urlPath":"www.daqihui.cn", "forms":forms,
