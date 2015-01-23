@@ -185,7 +185,7 @@ a code {
 	display:inline-block;
 	padding:3px;
 }
-.contact_form input {
+.contact_form input[type="text"] {
 	height:20px;
 	width:180px;
 	padding:5px 8px;
@@ -194,7 +194,7 @@ a code {
 .contact_form button {margin-left:156px;}
 
 /* form element visual styles */
-.contact_form input, .contact_form textarea {
+.contact_form input[type="text"], .contact_form textarea {
     border:1px solid #aaa;
     box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
     border-radius:2px;
@@ -204,7 +204,7 @@ a code {
     -o-transition: padding .25s;
     transition: padding .25s;
 }
-.contact_form input:focus, .contact_form textarea:focus {
+.contact_form input[type="text"]:focus, .contact_form textarea:focus {
     background: #fff;
     border:1px solid #555;
     box-shadow: 0 0 3px #aaa;
@@ -212,15 +212,15 @@ a code {
 }
 
 /* === HTML5 validation styles === */
-.contact_form input:required, .contact_form textarea:required {
+.contact_form input[type="text"]:required, .contact_form textarea:required {
 	background: #fff url(images/red_asterisk.png) no-repeat 98% center;
 }
-.contact_form input:required:valid, .contact_form textarea:required:valid {
+.contact_form input[type="text"]:required:valid, .contact_form textarea:required:valid {
 	background: #fff url(images/valid.png) no-repeat 98% center;
 	box-shadow: 0 0 5px #5cd053;
 	border-color: #28921f;
 }
-.contact_form input:focus:invalid, .contact_form textarea:focus:invalid {
+.contact_form input[type="text"]:focus:invalid, .contact_form textarea:focus:invalid {
 	background: #fff url(images/invalid.png) no-repeat 98% center;
 	box-shadow: 0 0 5px #d45252;
 	border-color: #b03535
@@ -352,9 +352,9 @@ button.submit:active {
 	top:1px;
 	left:-6px;
 }
-.contact_form input:focus + .form_hint {display: inline;}
-.contact_form input:required:valid + .form_hint {background: #28921f;}
-.contact_form input:required:valid + .form_hint::before {color:#28921f;}
+.contact_form input[type="text"]:focus + .form_hint {display: inline;}
+.contact_form input[type="text"]:required:valid + .form_hint {background: #28921f;}
+.contact_form input[type="text"]:required:valid + .form_hint::before {color:#28921f;}
 
 .add_element{
     float:right;

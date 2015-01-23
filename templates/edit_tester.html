@@ -26,26 +26,36 @@
                 <label for="urlPath">Url Path:</label>
                 <input type="text" name="urlPath" id="urlPath" placeholder="/login" required/><br>
                 <label for="sleepTime">Sleep Time:</label>
-                <input style="width:15px" type="text" name="sleepTime" id="sleepTime" placeholder="2" required/>&nbsp;s<br>
+                <input style="width:15px" type="text" name="sleepTime" id="sleepTime" placeholder="2" required/>&nbsp;s
+                <label style="margin-left:100px;" for="waitClose">Wait Close:</label>
+                <input style="width:15px" type="text" name="waitClose" id="waitClose" placeholder="20" required/>&nbsp;s<br>
                 <label for="forms">Forms:</label>
-                <input id="forms" name="forms" style="width:15px;height:15px" type="checkbox"/>
+                <input id="forms" name="forms" type="checkbox"/>
                 <a id="add_tester_form" style="float:right;line-height:35px;">Add Tester</a><hr>
                 <div id="add_form_info" style="display:none">
                     <ul id="form_tester">
                         <li>
-                            <label for="testName">TestName:</label>
-                            <input type="text" name="testName" id="testName" placeholder="测试帐户不存在"/>
+                            <label>TestName:</label>
+                            <input type="text" name="testName" placeholder="测试帐户不存在"/>
                             <a class="add_element">Add Element</a>
                         </li>
                         <li>
-                            <label for="elementName">ElementName:</label>
-                            <input type="text" name="elementName" id="elementName" placeholder="loginBy"/>
-                            <label style="margin-left:20px" for="elementValue">ElementValue:</label>
-                            <input type="text" name="elementValue" id="elementValue" placeholder="测试用户名"/>
+                            <label style="width:80px">Form Type:</label>
+                            <select name="formType">
+                                <option value="1">text</option>
+                                <option value="2">radio</option>
+                                <option value="3">select</option>
+                                <option value="4">file</option>
+                                <option value="5">checked</option>
+                            </select>
+                            <label style="margin-left:50px">Form ElName:</label>
+                            <input style="width:80px;" type="text" name="formElName" placeholder="loginBy"/>
+                            <label style="margin-left:50px">Form ElValue:</label>
+                            <input style="width:80px;" type="text" name="formElValue" placeholder="测试用户名"/>
                         </li>
                     </ul>
                 </div>
-                <label>Actions:</label><a id="add_new_action" style="float:right;line-height:35px;">Add Action</a><hr>
+                <label style="width:400px">Actions:(First action is used to form)</label><a id="add_new_action" style="float:right;line-height:35px;">Add Action</a><hr>
                 <div id="add_action_info">
                     <ul class="action_info" id="action_info">
                         <li>
@@ -176,6 +186,22 @@
             $("#action_info").clone(true).attr("id", "action_info" + action_num++).appendTo("#add_action_info");
         })
 
+        $("[name=formType]").change(function(){
+            if($(this).val() == 5){
+                var parent_obj = $(this).parent();
+                if(parent_obj.children("[name=formElValue]")[0].type != "checkbox"){
+                    parent_obj.children("[name=formElValue]").remove()
+                    $("<input type='checkbox' name='formElValue'/>").appendTo(parent_obj);
+                }
+            }else{
+                var parent_obj = $(this).parent();
+                if(parent_obj.children("[name=formElValue]")[0].type != "text"){
+                    parent_obj.children("[name=formElValue]").remove()
+                    $("<input style='width:80px;' type='text' name='formElValue' placeholder='测试用户名'/>").appendTo(parent_obj);
+                }
+            }
+        })
+
         $("#submit_tester").click(function(){
             var forms;
             if($("#forms").is(":checked")){
@@ -187,10 +213,15 @@
                         }
                         var form = new Object();
                         form.testName = $(this).val()
-                        form.params = new Object();
+                        form.params = new Array();
                         $(this).parent().parent().children(":gt(0)").each(
                             function(){
-                                form.params[$(this).children("input")[0].value] = $(this).children("input")[1].value;
+                                var param = new Object();
+                                param["formType"] = $(this).children("select")[0].value;
+                                param["formElName"] = $(this).children("input")[0].value;
+                                param["formElValue"] = $(this).children("input")[1].value;
+
+                                form.params.push(param);
                             }
                         )
                         forms.push(form)

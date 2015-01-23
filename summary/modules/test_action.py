@@ -20,11 +20,22 @@ CREATE TABLE `test_actions` (
 );
 CREATE INDEX `test_actions_queue_id` ON test_actions(`queue_id`);
 
+browser.fill('query', 'my name')
+browser.attach_file('file', '/path/to/file/somefile.jpg')
+browser.choose('some-radio', 'radio-value')
+browser.check('some-check')
+browser.uncheck('some-check')
+browser.select('uf', 'rj')
 forms=[{"testName":"测试未输入用户名",
-        "params": {
-            "loginBy":"",
-            "password":"",
-        }},
+        "params": [{
+            "form_type":"text, radio, select, file, checked",
+            "form_el_name":"loginBy",
+            "form_el_value":"michael",
+        },{
+            "form_type":"text, radio, select, file, checked, unchecked",
+            "form_el_name":"loginBy",
+            "form_el_value":"michael",
+        }]},
         {"testName":"测试未输入密码",
         "params": {
             "loginBy":"michael",

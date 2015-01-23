@@ -46,9 +46,10 @@ class TestEngine(object):
         if action_obj.forms is not None:
             form_action = action_list[0]
             for form in json.loads(action_obj.forms):
-                for el_key, el_val in form["params"].items():
-                    self.browser.fill(el_key, el_val.decode("utf-8"))
+                for param in form["params"]:
+                    self.__set_value(int(param["formType"]), param["formElName"], param["formElValue"].decode("utf-8"))
                     sleep(TestEngine.__sleep_time)
+
                 self.__deal_action(form_action["action"], form_action["elType"], form_action["elValue"])
 
             for action_deal in action_list[1:]:
@@ -62,6 +63,25 @@ class TestEngine(object):
     def __test_list(self, domain, action_list):
         for action in action_list:
             self.__test_do(domain, action)
+
+
+    def __set_value(self, form_type, el_name, el_value):
+        if form_type == 1:
+            self.browser.fill(el_name, el_value)
+        elif form_type == 2:
+            self.browser.choose(el_name, el_value)
+        elif form_type == 3:
+            self.browser.select(el_name, el_value)
+        elif form_type == 4:
+            self.browser.attach_file(el_name, el_value)
+        elif form_type == 5:
+            if el_value:
+                self.browser.check(el_name)
+            else:
+                self.browser.uncheck(el_name)
+        else:
+            raise ValueError("Can't find form type with %s", form_type)
+
 
     def __event_element(self, el_type, el_value):
         ele_type = EL_TYPE.value(el_type)
@@ -80,6 +100,7 @@ class TestEngine(object):
             return self.browser.find_by_css(el_value)
         else:
             raise ValueError("Test Engine can't deal the element type:%s, el_type:%s", ele_type, el_type)
+
 
     def __deal_action(self, action, el_type, el_value):
         action_type = ACTION_TYPE.value(action)
@@ -104,6 +125,7 @@ class TestEngine(object):
 
         sleep(4)
 
+
     def __mouse_of_click(self, event_deal_obj):
         if TestEngine.__mouse_over:
             event_deal_obj.mouse_over()
@@ -112,6 +134,7 @@ class TestEngine(object):
         else:
             event_deal_obj.click()
 
+
     def __mouse_of_right_click(self, event_deal_obj):
         if TestEngine.__mouse_over:
             event_deal_obj.mouse_over()
@@ -119,6 +142,7 @@ class TestEngine(object):
             event_deal_obj.right_click()
         else:
             event_deal_obj.click()
+
 
     def __mouse_of_double_click(self, event_deal_obj):
         if TestEngine.__mouse_over:
