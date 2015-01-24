@@ -334,6 +334,10 @@ button.submit:active {
 	border-color:#FFCC66
 }
 
+.dform span{
+    margin-right:100px;
+}
+
 /* === Form hints === */
 .form_hint {
 	background: #d45252;
@@ -359,4 +363,19 @@ button.submit:active {
 .add_element{
     float:right;
     line-height:30px
+}
+
+.theme-auto_window {
+	z-index:9999;
+	position:fixed;
+	top:50%;
+	left:50%;
+	width:760px;
+	min-height:160px;
+	margin:-180px 0 0 -360px;
+	border-radius:5px;
+	border:solid 2px #666;
+	background-color:#fff;
+	display:none;
+	box-shadow: 0 0 10px #666;
 }

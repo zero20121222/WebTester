@@ -12,11 +12,11 @@
         <label style="margin-left:200px" for="queue_select">Test Queue:</label>
         <select id="queue_select">
             {% for queue_val in queue_values %}
-                {% if params.get("queueId") is not None and params.get("queueId") == str(queue_val.id) %}
-                    <option value="{{queue_val.id}}" selected="selected">{{queue_val.queueName}}</option>
-                {% else %}
-                    <option value="{{queue_val.id}}">{{queue_val.queueName}}</option>
-                {% end %}
+            {% if params.get("queueId") is not None and params.get("queueId") == str(queue_val.id) %}
+            <option value="{{queue_val.id}}" selected="selected">{{queue_val.queueName}}</option>
+            {% else %}
+            <option value="{{queue_val.id}}">{{queue_val.queueName}}</option>
+            {% end %}
             {% end %}
         </select>
         <br>
@@ -38,14 +38,14 @@
                 <td>{{action_val.urlPath}}</td>
                 <td>{{len(json_dict(action_val.actionList)) if action_val.actionList is not None else 0}}</td>
                 {% if action_val.forms is not None and len(json_dict(action_val.forms)) > 0 %}
-                    <td>{{len(json_dict(action_val.forms))}}</td>
-                    <td>{{len(json_dict(action_val.forms)[0]["params"])}}</td>
+                <td>{{len(json_dict(action_val.forms))}}</td>
+                <td>{{len(json_dict(action_val.forms)[0]["params"])}}</td>
                 {% else %}
-                    <td>0</td>
-                    <td>0</td>
+                <td>0</td>
+                <td>0</td>
                 {% end %}
                 <td>{{action_val.sleepTime}}&nbsp;s</td>
-                <td><a>detail</a></td>
+                <td><a forms-detail="{{action_val.forms}}" actions-detail="{{action_val.actionList}}" class="show_detail_action">detail</a></td>
             </tr>
             {% end %}
         </table>
@@ -53,6 +53,21 @@
         <button id="submit_test">Tes Queue</button>
     </div>
 </div>
+<div class="theme-auto_window" id="create_queue">
+    <div class="theme-poptit">
+        <a href="javascript:;" title="关闭" class="close">×</a>
+        <h3>Action Detail</h3>
+    </div>
+    <div class="dform" style="text-align:left">
+        <form class="contact_form" name="queue_form" action="/edit_queue" method="post">
+            <h4>Forms:</h4><hr>
+            <div id="add_form_info"></div>
+            <h4>Actions:</h4><hr>
+            <div id="add_action_info"></div>
+        </form>
+    </div>
+</div>
+<div class="theme-popover-mask"></div>
 {% end %}
 
 {% block bottom %}
@@ -70,8 +85,67 @@
     }});
 
     jQuery(document).ready(function($) {
+        FORM_TYPE = {"1": "text", "2": "radio", "3": "select", "4": "file", "5": "checked"}
+        EL_TYPE = {"1": "id", "2": "name", "3": "tag", "4": "value", "5": "selector", "6": "css"}
+        ACTION_TYPE = {"1": "click", "2": "double click", "3": "right click", "4": "mouse over", "5": "mouse out", "6": "select"}
+
         $("#queue_select").change(function(){
             location.href = "http://localhost:8888/?queueId="+$(this).val();
+        })
+
+        $('.show_detail_action').click(function(){
+            form_list = $(this).attr("forms-detail");
+            action_list = $(this).attr("actions-detail");
+            forms_obj = $("#add_form_info");
+            actions_obj = $("#add_action_info");
+
+            forms_obj.empty();
+            actions_obj.empty();
+            forms = null;
+            if(form_list != "None"){
+                forms = JSON.parse(form_list);
+            }
+
+            for(i in forms){
+                ul = $("<ul></ul>");
+                $("<li><span>TestName:"+forms[i].testName+"</span></li>").appendTo(ul);
+
+                for(n in forms[i].params){
+                    var li = $("<li></li>");
+                    var form_type = FORM_TYPE[forms[i].params[n].formType+""]
+                    $("<span>Form Type:"+form_type+"</span><span>Form ElName:"+forms[i].params[n].formElName+"</span>"+
+                      "<span>Form ElValue:"+forms[i].params[n].formElValue+"</span>").appendTo(li);
+
+                    li.appendTo(ul);
+                }
+                ul.appendTo(forms_obj);
+            }
+
+            actions = null;
+            if(action_list != "None"){
+                actions = JSON.parse(action_list);
+            }
+
+            action_ul = $("<ul></ul>");
+            for(i in actions){
+                var li = $("<li></li>");
+                var elType = EL_TYPE[actions[i].elType+""]
+                var action = ACTION_TYPE[actions[i].action+""]
+                $("<span>El Type:"+elType+"</span><span>El Value:"+actions[i].elValue+"</span>"+
+                  "<span>Form Action:"+action+"</span>").appendTo(li);
+
+                li.appendTo(action_ul);
+
+            }
+            action_ul.appendTo(actions_obj);
+
+            $('.theme-popover-mask').fadeIn(100);
+            $('#create_queue').slideDown(200);
+        })
+
+        $('.close').click(function(){
+            $('.theme-popover-mask').fadeOut(100);
+            $('#create_queue').slideUp(200);
         })
 
         $("#submit_test").click(function(){
@@ -92,7 +166,10 @@
                 actionIds: actionIds.toString()
             }
 
-            alert(actionIds.toString())
+            if(actionIds.length == 0){
+                alert("Please select test action.")
+                return false;
+            }
 
             $.get("/api/tester_deal", params);
         })
