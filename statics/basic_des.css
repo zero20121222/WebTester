@@ -365,17 +365,31 @@ button.submit:active {
     line-height:30px
 }
 
-.theme-auto_window {
+.theme_auto_window {
 	z-index:9999;
 	position:fixed;
 	top:50%;
 	left:50%;
 	width:760px;
 	min-height:160px;
-	margin:-180px 0 0 -360px;
+	margin:-280px 0 0 -360px;
 	border-radius:5px;
 	border:solid 2px #666;
 	background-color:#fff;
 	display:none;
 	box-shadow: 0 0 10px #666;
+}
+
+.form_delete_form{
+    float:right;
+    line-height:35px;
+    font-size:26px;
+    color:red;
+}
+
+.action_delete_form{
+    float:right;
+    line-height:35px;
+    font-size:26px;
+    color:red;
 }

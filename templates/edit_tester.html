@@ -33,7 +33,7 @@
                 <input id="forms" name="forms" type="checkbox"/>
                 <a id="add_tester_form" style="float:right;line-height:35px;">Add Tester</a><hr>
                 <div id="add_form_info" style="display:none">
-                    <ul id="form_tester">
+                    <ul class="form_tester">
                         <li>
                             <label>TestName:</label>
                             <input type="text" name="testName" placeholder="测试帐户不存在"/>
@@ -52,12 +52,13 @@
                             <input style="width:80px;" type="text" name="formElName" placeholder="loginBy"/>
                             <label style="margin-left:50px">Form ElValue:</label>
                             <input style="width:80px;" type="text" name="formElValue" placeholder="测试用户名"/>
+                            <a class="form_delete_form" title="close">-</a>
                         </li>
                     </ul>
                 </div>
                 <label style="width:400px">Actions:(First action is used to form)</label><a id="add_new_action" style="float:right;line-height:35px;">Add Action</a><hr>
                 <div id="add_action_info">
-                    <ul class="action_info" id="action_info">
+                    <ul class="action_info">
                         <li>
                             <label style="width:50px">El Type:</label>
                             <select name="elType">
@@ -79,6 +80,7 @@
                                 <option value="5">mouse out</option>
                                 <option value="6">select</option>
                             </select>
+                            <a class="action_delete_form" title="close">-</a>
                         </li>
                     </ul>
                 </div>
@@ -174,7 +176,7 @@
 
         $("#add_tester_form").click(function(){
             if($("#forms").is(":checked")){
-                $("#form_tester").clone(true).attr("id", "form_tester" + form_num++).appendTo("#add_form_info");
+                $(".form_tester:lt(1)").clone(true).appendTo("#add_form_info");
             }
         })
 
@@ -183,7 +185,27 @@
         })
 
         $("#add_new_action").click(function(){
-            $("#action_info").clone(true).attr("id", "action_info" + action_num++).appendTo("#add_action_info");
+            $(".action_info:lt(1)").clone(true).appendTo("#add_action_info");
+        })
+
+        $(".form_delete_form").click(function(){
+            action_div = $(this).parent().parent();
+            if(action_div.children().length <= 2){
+                alert("Can't delete again!")
+                return false;
+            }
+
+            $(this).parent().remove();
+        })
+
+        $(".action_delete_form").click(function(){
+            action_div = $(this).parent().parent().parent();
+            if(action_div.children().length <= 1){
+                alert("Can't delete again!")
+                return false;
+            }
+
+            $(this).parent().parent().remove();
         })
 
         $("[name=formType]").change(function(){
