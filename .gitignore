@@ -19,3 +19,5 @@ secrets.cfg
 database.yaml
 redis.yaml
 env.yaml
+
+test/*
