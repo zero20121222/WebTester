@@ -102,7 +102,7 @@ class EngineDealObj(object):
 
 
 
-class TesterEngine(object):
+class ClientEngine(object):
     __browser = None
     def __init__(self, queue):
         self.queue = queue
@@ -124,8 +124,8 @@ class TesterEngine(object):
         try:
             message_obj = EngineDealObj.str_to_obj(message)
             if message_obj.method == "initEngine":
-                TesterEngine.init_Engine(message_obj.driver, message_obj.execute_path)
-                MessageDeal.engine_info("[Info]Init testerEngine.")
+                ClientEngine.init_Engine(message_obj.driver, message_obj.execute_path)
+                MessageDeal.engine_info("[Info]Init clientEngine.")
 
             elif message_obj.method == "testDeal":
                 test_thread = threading.Thread(target=self.test_deal, args=("http://www.daqihui.com/login",))
@@ -137,7 +137,7 @@ class TesterEngine(object):
         except ValueError as e:
             MessageDeal.engine_error("[Error] value error %s" % e)
         except Exception as e:
-            MessageDeal.engine_error("[Error]TesterEngine:deal_method error %s" % e)
+            MessageDeal.engine_error("[Error]ClientEngine:deal_method error %s" % e)
 
     def test_deal(self, url):
         try:
@@ -149,11 +149,11 @@ class TesterEngine(object):
 
             self.__browser.find_by_css("list-right").first.click()
         except Exception as e:
-            MessageDeal.engine_error("[Error]TesterEngine:test_deal error %s" % e)
+            MessageDeal.engine_error("[Error]ClientEngine:test_deal error %s" % e)
 
     @staticmethod
     def init_Engine(driver, executable_path):
-        TesterEngine.__browser = Browser(driver, executable_path=executable_path)
+        ClientEngine.__browser = Browser(driver, executable_path=executable_path)
 
 def testLogin(browser, desc, userName, passwd, result):
     browser.fill("loginBy", userName.decode("utf-8"))
@@ -166,7 +166,7 @@ def Main():
     send_message("Init Tester Engine!")
     queue = Queue.Queue()
 
-    tester = TesterEngine(queue)
+    tester = ClientEngine(queue)
 
     thread = threading.Thread(target=read_message_thread, args=(queue,))
     thread.daemon = True

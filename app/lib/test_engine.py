@@ -20,8 +20,8 @@ class TestEngine(object):
     __mouse_over = None
     __mouse_over_sleep = None
 
-    def __init__(self, browser_name):
-        self.browser = Browser(browser_name)
+    def __init__(self, browser_name, execute_path=None):
+        self.browser = Browser(browser_name, executable_path=execute_path)
 
     @staticmethod
     def set_config(config):
