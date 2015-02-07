@@ -6,7 +6,7 @@ __author__ = 'MichaelZhao'
 import yaml
 import redis
 from basic_db import DBConfig
-from app.lib.test_engine import TestEngine
+from engine.test_engine import TestEngine
 
 def __parse_config():
     with open("config/redis.yaml") as m:

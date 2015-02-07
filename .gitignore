@@ -21,3 +21,6 @@ redis.yaml
 env.yaml
 
 test/*
+build/*
+dist/*
+testerClient.egg-info/*

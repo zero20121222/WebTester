@@ -9,6 +9,7 @@ import Queue
 from time import sleep
 
 from splinter import Browser
+from engine.test_module import TesterAction, TesterData
 
 try:
     import Tkinter
@@ -100,8 +101,6 @@ class EngineDealObj(object):
         except ValueError as e:
             raise ValueError("[Error]EngineDealObj analytical failed, (%s) error code(%s)" % (str_val, e))
 
-
-
 class ClientEngine(object):
     __browser = None
     def __init__(self, queue):
@@ -128,9 +127,10 @@ class ClientEngine(object):
                 MessageDeal.engine_info("[Info]Init clientEngine.")
 
             elif message_obj.method == "testDeal":
+                tester_data = TesterData(message_obj.data_obj["domain"], TesterAction().dict_to_list(message_obj.data_obj["testerAction"]))
                 test_thread = threading.Thread(target=self.test_deal, args=("http://www.daqihui.com/login",))
                 test_thread.start()
-                MessageDeal.engine_info("[Info]Deal function.")
+                MessageDeal.engine_info("[Info]Deal function.TesterData:%s" % tester_data)
 
             else:
                 MessageDeal.engine_error("[Error]Can't deal the method %s" % message_obj.method)

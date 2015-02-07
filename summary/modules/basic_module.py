@@ -5,21 +5,24 @@ import json
 __author__ = 'MichaelZhao'
 
 class BasicModule(object):
-    def __init__(self, dict_list=None, deep_split=False):
+    def __init__(self, dict_obj=None, deep_split=False):
         '''
         根据dict对象或json数据构建对象
-        :param dict_list:   dict对象，json数据
+        :param dict_obj:   dict对象，json数据
         :param deep_split:  是否深度解析数据(递归生成数据对象)
         :return: Obj
         '''
-        if dict_list is not None:
-            dict_values = dict_list if isinstance(dict_list, dict) else json.loads(dict_list)
+        if dict_obj is not None:
+            dict_values = dict_obj if isinstance(dict_obj, dict) else json.loads(dict_obj)
 
             for a, b in dict_values.items():
-                if deep_split and isinstance(b, (list, tuple)):
-                   setattr(self, a, [BasicModule(x) if isinstance(x, dict) else x for x in b])
+                if deep_split:
+                    if isinstance(b, (list, tuple)):
+                       setattr(self, a, [BasicModule(x) if isinstance(x, dict) else x for x in b])
+                    else:
+                       setattr(self, a, BasicModule(b) if isinstance(b, dict) else b)
                 else:
-                   setattr(self, a, BasicModule(b) if isinstance(b, dict) else b)
+                    setattr(self, a, b)
 
     def to_orm(self, obj_list, dict_v=True):
         '''

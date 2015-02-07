@@ -2,7 +2,7 @@
 # -*- encoding: utf8 -*-
 __author__ = 'MichaelZhao'
 
-from app.lib.test_engine import TestEngine
+from engine.test_engine import TestEngine
 from app.lib.basic_handler import BasicHandler
 from summary.daos.domain_dao import DomainDao
 from summary.daos.action_dao import ActionDao
