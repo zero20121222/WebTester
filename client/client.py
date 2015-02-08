@@ -8,7 +8,7 @@ import threading
 import Queue
 from time import sleep
 
-from splinter import Browser
+from engine.test_engine import TestEngine
 from engine.test_module import TesterAction, TesterData
 
 try:
@@ -102,7 +102,7 @@ class EngineDealObj(object):
             raise ValueError("[Error]EngineDealObj analytical failed, (%s) error code(%s)" % (str_val, e))
 
 class ClientEngine(object):
-    __browser = None
+    __engine = None
     def __init__(self, queue):
         self.queue = queue
 
@@ -112,7 +112,7 @@ class ClientEngine(object):
                 message = self.queue.get_nowait()
 
                 if message is None:
-                    self.__browser.quit()
+                    self.__engine.browser.quit()
                     return
                 else:
                     self.deal_method(message)
@@ -123,14 +123,19 @@ class ClientEngine(object):
         try:
             message_obj = EngineDealObj.str_to_obj(message)
             if message_obj.method == "initEngine":
+                # 初始化测试引擎
                 ClientEngine.init_Engine(message_obj.driver, message_obj.execute_path)
                 MessageDeal.engine_info("[Info]Init clientEngine.")
 
+            elif message_obj.method == "closeEngine":
+                # 关闭测试引擎
+                self.queue.put(None)
+
             elif message_obj.method == "testDeal":
+                # 处理测试数据信息
                 tester_data = TesterData(message_obj.data_obj["domain"], TesterAction().dict_to_list(message_obj.data_obj["testerAction"]))
-                test_thread = threading.Thread(target=self.test_deal, args=("http://www.daqihui.com/login",))
-                test_thread.start()
-                MessageDeal.engine_info("[Info]Deal function.TesterData:%s" % tester_data)
+                self.__engine.test_list_acts(tester_data.domain, tester_data.testerAction)
+                MessageDeal.engine_info("[Info]Deal tester engine.")
 
             else:
                 MessageDeal.engine_error("[Error]Can't deal the method %s" % message_obj.method)
@@ -141,19 +146,19 @@ class ClientEngine(object):
 
     def test_deal(self, url):
         try:
-            self.__browser.visit(url)
-            testLogin(self.__browser, '测试未输入用户名','','','请输入会员名')
-            testLogin(self.__browser, '测试未输入密码','qd_test_001','','请输入密码')
-            testLogin(self.__browser, '测试帐户不存在','这是一个不存在的名字哦','xxxxxxx','该账户名不存在')
-            testLogin(self.__browser, '测试成功登录','v@terminus.io','123456','企业互惠')
+            self.__engine.browser.visit(url)
+            testLogin(self.__engine.browser, '测试未输入用户名','','','请输入会员名')
+            testLogin(self.__engine.browser, '测试未输入密码','qd_test_001','','请输入密码')
+            testLogin(self.__engine.browser, '测试帐户不存在','这是一个不存在的名字哦','xxxxxxx','该账户名不存在')
+            testLogin(self.__engine.browser, '测试成功登录','v@terminus.io','123456','企业互惠')
 
-            self.__browser.find_by_css("list-right").first.click()
+            self.__engine.browser.find_by_css("list-right").first.click()
         except Exception as e:
             MessageDeal.engine_error("[Error]ClientEngine:test_deal error %s" % e)
 
     @staticmethod
     def init_Engine(driver, executable_path):
-        ClientEngine.__browser = Browser(driver, executable_path=executable_path)
+        ClientEngine.__engine = TestEngine(driver, execute_path=executable_path)
 
 def testLogin(browser, desc, userName, passwd, result):
     browser.fill("loginBy", userName.decode("utf-8"))

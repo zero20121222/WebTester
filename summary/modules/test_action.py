@@ -54,14 +54,3 @@ class TestAction(BasicModule):
         self.createdAt = None
         self.updatedAt = None
         BasicModule.__init__(self, dict_list, deep_split)
-
-class TesterData(object):
-    def __init__(self, dict_obj):
-        self.domain = dict_obj["domain"]
-        self.testerAction = TestAction().dict_to_list(dict_obj["testerAction"])
-
-if __name__ == "__main__":
-    obj = TesterData({"domain":"http://www.daqihui.com", "testerAction":[{"urlPath":"/login",
-            "forms":[{"params": [{"formType": "1", "formElName": "loginBy", "formElValue": "v@terminus.io"}, {"formType": "1", "formElName": "password", "formElValue": "123456"}], "testName": "测试用户登入"}],
-            "actionList":[{"action": "1", "elType": "1", "elValue": "login-submit"}, {"action": "1", "elType": "6", "elValue": ".shop-list"}, {"action": "1", "elType": "6", "elValue": ".btn-danger"}, {"action": "1", "elType": "6", "elValue": ".btn-success"}, {"action": "1", "elType": "6", "elValue": ".btn-medium"}]}]})
-    print obj.testerAction

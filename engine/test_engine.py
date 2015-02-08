@@ -15,9 +15,9 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 class TestEngine(object):
-    __sleep_time = None
-    __mouse_over = None
-    __mouse_over_sleep = None
+    __sleep_time = 2
+    __mouse_over = True
+    __mouse_over_sleep = 1
 
     def __init__(self, browser_name, execute_path=None):
         if execute_path is None:
@@ -45,7 +45,7 @@ class TestEngine(object):
             for action in action_list:
                 self.__test_do(domain, action)
         except Exception as e:
-            print "[Error code] deal test list failed, error code=", e
+            raise Exception("[Error code] deal test list failed, error code=", e)
         finally:
             sleep(action_list[0].waitClose)
             self.browser.quit()
@@ -55,7 +55,7 @@ class TestEngine(object):
         try:
             self.__test_do(domain, action_obj)
         except Exception as e:
-            print "[Error code] deal test failed, error code=", e
+            raise Exception("[Error code] deal test failed, error code=", e)
         finally:
             sleep(action_obj.waitClose)
             self.browser.quit()
@@ -66,10 +66,11 @@ class TestEngine(object):
         self.browser.visit(test_url)
 
         # form表单默认为第一个action循环测试，之后的action按照顺序执行
-        action_list = json.loads(action_obj.actionList)
+        action_list = json.loads(action_obj.actionList) if isinstance(action_obj.actionList, str) else action_obj.actionList
         if action_obj.forms is not None:
             form_action = action_list[0]
-            for form in json.loads(action_obj.forms):
+            forms = json.loads(action_obj.forms) if isinstance(action_obj.forms, str) else action_obj.forms
+            for form in forms:
                 for param in form["params"]:
                     self.__set_value(int(param["formType"]), param["formElName"], param["formElValue"].decode("utf-8"))
                     sleep(TestEngine.__sleep_time)
@@ -87,21 +88,23 @@ class TestEngine(object):
 
 
     def __set_value(self, form_type, el_name, el_value):
-        if form_type == 1:
-            self.browser.fill(el_name, el_value)
-        elif form_type == 2:
-            self.browser.choose(el_name, el_value)
-        elif form_type == 3:
-            self.browser.select(el_name, el_value)
-        elif form_type == 4:
-            self.browser.attach_file(el_name, el_value)
-        elif form_type == 5:
-            if bool(el_value):
-                self.browser.check(el_name)
+        elements = self.__event_element(form_type, el_name)
+        element = elements.first
+        if element['type'] in ['text', 'password', 'tel'] or element.tag_name == 'textarea':
+            element.value = el_value
+        elif element['type'] == 'checkbox':
+            if el_value:
+                element.check()
             else:
-                self.browser.uncheck(el_name)
+                element.uncheck()
+        elif element['type'] == 'radio':
+            for field in elements:
+                if field.value == el_value:
+                    field.click()
+        elif element._element.tag_name == 'select':
+            element.find_by_value(el_value).first._element.click()
         else:
-            raise ValueError("Can't find form type with %s", form_type)
+            element.value = el_value
 
 
     def __event_element(self, el_type, el_value):
@@ -142,7 +145,7 @@ class TestEngine(object):
         elif action_type == "select":
             self.__event_element(el_type, el_value).first.select()
         else:
-            print "don't find action for action:%s", action
+            raise Exception("don't find action for action:%s", action)
 
 
     def __mouse_of_click(self, event_deal_obj):

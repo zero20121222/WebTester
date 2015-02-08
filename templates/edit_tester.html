@@ -42,11 +42,12 @@
                         <li>
                             <label style="width:80px">Form Type:</label>
                             <select name="formType">
-                                <option value="1">text</option>
-                                <option value="2">radio</option>
-                                <option value="3">select</option>
-                                <option value="4">file</option>
-                                <option value="5">checked</option>
+                                <option value="1">id</option>
+                                <option value="2">name</option>
+                                <option value="3">tag</option>
+                                <option value="4">value</option>
+                                <option value="5">selector</option>
+                                <option value="6">css</option>
                             </select>
                             <label style="margin-left:50px">Form ElName:</label>
                             <input style="width:80px;" type="text" name="formElName" placeholder="loginBy"/>
@@ -206,22 +207,6 @@
             }
 
             $(this).parent().parent().remove();
-        })
-
-        $("[name=formType]").change(function(){
-            if($(this).val() == 5){
-                var parent_obj = $(this).parent();
-                if(parent_obj.children("[name=formElValue]")[0].type != "checkbox"){
-                    parent_obj.children("[name=formElValue]").remove()
-                    $("<input type='checkbox' name='formElValue'/>").appendTo(parent_obj);
-                }
-            }else{
-                var parent_obj = $(this).parent();
-                if(parent_obj.children("[name=formElValue]")[0].type != "text"){
-                    parent_obj.children("[name=formElValue]").remove()
-                    $("<input style='width:80px;' type='text' name='formElValue' placeholder='测试用户名'/>").appendTo(parent_obj);
-                }
-            }
         })
 
         $("#submit_tester").click(function(){
