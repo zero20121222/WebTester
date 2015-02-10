@@ -112,7 +112,7 @@ class ClientEngine(object):
                 message = self.queue.get_nowait()
 
                 if message is None:
-                    self.__engine.browser.quit()
+                    self.__engine.quit()
                     return
                 else:
                     self.deal_method(message)
@@ -129,13 +129,13 @@ class ClientEngine(object):
 
             elif message_obj.method == "closeEngine":
                 # 关闭测试引擎
-                self.queue.put(None)
+                self.__close_engine()
 
             elif message_obj.method == "testDeal":
                 # 处理测试数据信息
                 tester_data = TesterData(message_obj.data_obj["domain"], TesterAction().dict_to_list(message_obj.data_obj["testerAction"]))
-                self.__engine.test_list_acts(tester_data.domain, tester_data.testerAction)
-                MessageDeal.engine_info("[Info]Deal tester engine.")
+                self.__engine.test_list_acts(tester_data.domain, tester_data.testerAction, self.__close_engine)
+                MessageDeal.engine_info("[Info]Deal tester engine %s" % message_obj.data_obj["testerAction"])
 
             else:
                 MessageDeal.engine_error("[Error]Can't deal the method %s" % message_obj.method)
@@ -144,27 +144,30 @@ class ClientEngine(object):
         except Exception as e:
             MessageDeal.engine_error("[Error]ClientEngine:deal_method error %s" % e)
 
-    def test_deal(self, url):
-        try:
-            self.__engine.browser.visit(url)
-            testLogin(self.__engine.browser, '测试未输入用户名','','','请输入会员名')
-            testLogin(self.__engine.browser, '测试未输入密码','qd_test_001','','请输入密码')
-            testLogin(self.__engine.browser, '测试帐户不存在','这是一个不存在的名字哦','xxxxxxx','该账户名不存在')
-            testLogin(self.__engine.browser, '测试成功登录','v@terminus.io','123456','企业互惠')
+    def __close_engine(self):
+        self.queue.put(None)
 
-            self.__engine.browser.find_by_css("list-right").first.click()
-        except Exception as e:
-            MessageDeal.engine_error("[Error]ClientEngine:test_deal error %s" % e)
+    # def test_deal(self, url):
+    #     try:
+    #         self.__engine.browser.visit(url)
+    #         testLogin(self.__engine.browser, '测试未输入用户名','','','请输入会员名')
+    #         testLogin(self.__engine.browser, '测试未输入密码','qd_test_001','','请输入密码')
+    #         testLogin(self.__engine.browser, '测试帐户不存在','这是一个不存在的名字哦','xxxxxxx','该账户名不存在')
+    #         testLogin(self.__engine.browser, '测试成功登录','v@terminus.io','123456','企业互惠')
+    #
+    #         self.__engine.browser.find_by_css("list-right").first.click()
+    #     except Exception as e:
+    #         MessageDeal.engine_error("[Error]ClientEngine:test_deal error %s" % e)
 
     @staticmethod
     def init_Engine(driver, executable_path):
         ClientEngine.__engine = TestEngine(driver, execute_path=executable_path)
 
-def testLogin(browser, desc, userName, passwd, result):
-    browser.fill("loginBy", userName.decode("utf-8"))
-    browser.fill("password", passwd.decode("utf-8"))
-    browser.find_by_id("login-submit").first.click()
-    MessageDeal.engine_info("is_text_present:%s" % browser.is_text_present(result))
+# def testLogin(browser, desc, userName, passwd, result):
+#     browser.fill("loginBy", userName.decode("utf-8"))
+#     browser.fill("password", passwd.decode("utf-8"))
+#     browser.find_by_id("login-submit").first.click()
+#     MessageDeal.engine_info("is_text_present:%s" % browser.is_text_present(result))
 
 
 def Main():

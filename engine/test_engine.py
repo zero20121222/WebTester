@@ -21,9 +21,11 @@ class TestEngine(object):
 
     def __init__(self, browser_name, execute_path=None):
         if execute_path is None:
-            self.browser = Browser(browser_name)
+            self.__browser = Browser(browser_name)
+            self.__quit = False
         else:
-            self.browser = Browser(browser_name, executable_path=execute_path)
+            self.__browser = Browser(browser_name, executable_path=execute_path)
+            self.__quit = False
 
     @staticmethod
     def set_config(config):
@@ -31,45 +33,61 @@ class TestEngine(object):
         TestEngine.__mouse_over = True if config.get("mouse_over") is None else config.get("mouse_over")
         TestEngine.__mouse_over_sleep = 1 if config.get("mouse_over_sleep") is None else config.get("mouse_over_sleep")
 
-    def test_list_acts(self, domain, action_list):
-        thread_deal = threading.Thread(target=self.__test_list_thread, args=(domain, action_list), name="TestEngine deal tester")
+    def test_list_acts(self, domain, action_list, back_fun=None):
+        thread_deal = threading.Thread(target=self.__test_list_thread, args=(domain, action_list, back_fun), name="TestEngine deal tester")
         thread_deal.start()
 
-    def test_deal(self, domain, action_obj):
-        thread_deal = threading.Thread(target=self.__test_do_thread, args=(domain, action_obj), name="TestEngine deal tester")
+    def test_deal(self, domain, action_obj, back_fun=None):
+        thread_deal = threading.Thread(target=self.__test_do_thread, args=(domain, action_obj, back_fun), name="TestEngine deal tester")
         thread_deal.start()
 
+    def quit(self):
+        self.__quit = True
+        self.__browser.quit()
 
-    def __test_list_thread(self, domain, action_list):
+    def is_quited(self):
+        return self.__quit
+
+    def __test_list_thread(self, domain, action_list, back_fun=None):
         try:
             for action in action_list:
                 self.__test_do(domain, action)
         except Exception as e:
             raise Exception("[Error code] deal test list failed, error code=", e)
         finally:
-            sleep(action_list[0].waitClose)
-            self.browser.quit()
+            if action_list[0].waitClose != 0:
+                sleep(action_list[0].waitClose)
+
+                if back_fun is None:
+                    self.quit()
+                else:
+                    back_fun()
 
 
-    def __test_do_thread(self, domain, action_obj):
+    def __test_do_thread(self, domain, action_obj, back_fun=None):
         try:
             self.__test_do(domain, action_obj)
         except Exception as e:
             raise Exception("[Error code] deal test failed, error code=", e)
         finally:
-            sleep(action_obj.waitClose)
-            self.browser.quit()
+            if action_obj.waitClose != 0:
+                sleep(action_obj.waitClose)
+
+                if back_fun is None:
+                    self.quit()
+                else:
+                    back_fun()
 
 
     def __test_do(self, domain, action_obj):
         test_url = domain+action_obj.urlPath
-        self.browser.visit(test_url)
+        self.__browser.visit(test_url)
 
         # form表单默认为第一个action循环测试，之后的action按照顺序执行
-        action_list = json.loads(action_obj.actionList) if isinstance(action_obj.actionList, str) else action_obj.actionList
+        action_list = json.loads(action_obj.actionList) if isinstance(action_obj.actionList, (str, unicode)) else action_obj.actionList
         if action_obj.forms is not None:
             form_action = action_list[0]
-            forms = json.loads(action_obj.forms) if isinstance(action_obj.forms, str) else action_obj.forms
+            forms = json.loads(action_obj.forms) if isinstance(action_obj.forms, (str, unicode)) else action_obj.forms
             for form in forms:
                 for param in form["params"]:
                     self.__set_value(int(param["formType"]), param["formElName"], param["formElValue"].decode("utf-8"))
@@ -111,17 +129,17 @@ class TestEngine(object):
         ele_type = EL_TYPE.value(el_type)
 
         if ele_type == "id":
-            return self.browser.find_by_id(el_value)
+            return self.__browser.find_by_id(el_value)
         elif ele_type == "name":
-            return self.browser.find_by_name(el_value)
+            return self.__browser.find_by_name(el_value)
         elif ele_type == "tag":
-            return self.browser.find_by_tag(el_value)
+            return self.__browser.find_by_tag(el_value)
         elif ele_type == "value":
-            return self.browser.find_by_value(el_value)
+            return self.__browser.find_by_value(el_value)
         elif ele_type == "selector":
-            return self.browser.find_by_xpath(el_value)
+            return self.__browser.find_by_xpath(el_value)
         elif ele_type == "css":
-            return self.browser.find_by_css(el_value)
+            return self.__browser.find_by_css(el_value)
         else:
             raise ValueError("Test Engine can't deal the element type:%s, el_type:%s", ele_type, el_type)
 
@@ -130,7 +148,7 @@ class TestEngine(object):
         action_type = ACTION_TYPE.value(action)
 
         # 当页面跳转是抓取最后一个打开的窗口页面
-        self.browser.windows.current = self.browser.windows[-1]
+        self.__browser.windows.current = self.__browser.windows[-1]
 
         if action_type == "click":
             self.__mouse_of_click(self.__event_element(el_type, el_value).first)
