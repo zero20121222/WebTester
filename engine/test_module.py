@@ -30,11 +30,17 @@ class BasicModule(object):
         return obj_queue
 
 class TesterData(object):
+    '''
+    整体测试对象
+    '''
     def __init__(self, domain, tester_action):
         self.domain = domain
         self.testerAction = tester_action
 
 class TesterAction(BasicModule):
+    '''
+    测试处理对象
+    '''
     def __init__(self, dict_list=None, deep_split=False):
         self.urlPath = None
         self.forms = None
@@ -43,8 +49,32 @@ class TesterAction(BasicModule):
         self.waitClose = None
         BasicModule.__init__(self, dict_list, deep_split)
 
-if __name__ == "__main__":
-    obj = TesterData({"domain":"http://www.daqihui.com", "testerAction":[{"urlPath":"/login",
-            "forms":[{"params": [{"formType": "1", "formElName": "loginBy", "formElValue": "v@terminus.io"}, {"formType": "1", "formElName": "password", "formElValue": "123456"}], "testName": "测试用户登入"}],
-            "actionList":[{"action": "1", "elType": "1", "elValue": "login-submit"}, {"action": "1", "elType": "6", "elValue": ".shop-list"}, {"action": "1", "elType": "6", "elValue": ".btn-danger"}, {"action": "1", "elType": "6", "elValue": ".btn-success"}, {"action": "1", "elType": "6", "elValue": ".btn-medium"}]}]})
-    print json.dumps(TesterAction().dict_to_list(obj.testerAction)[0].__dict__)
+class TesterForms(BasicModule):
+    '''
+    表单数据对象
+    '''
+    def __init__(self, dict_list=None, deep_split=False):
+        self.testName = None
+        self.params = None
+        BasicModule.__init__(self, dict_list, deep_split)
+
+class TesterFormData(BasicModule):
+    '''
+    具体表单数据
+    '''
+    def __init__(self, dict_list=None, deep_split=False):
+        self.formType = None
+        self.formElName = None
+        self.formElValue = None
+        BasicModule.__init__(self, dict_list, deep_split)
+
+class TesterActionData(BasicModule):
+    '''
+    测试动作数据
+    '''
+    def __init__(self, dict_list=None, deep_split=False):
+        self.action = None
+        self.elType = None
+        self.elValue = None
+        self.testerResult = None
+        BasicModule.__init__(self, dict_list, deep_split)

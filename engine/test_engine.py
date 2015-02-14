@@ -33,12 +33,13 @@ class TestEngine(object):
         TestEngine.__mouse_over = True if config.get("mouse_over") is None else config.get("mouse_over")
         TestEngine.__mouse_over_sleep = 1 if config.get("mouse_over_sleep") is None else config.get("mouse_over_sleep")
 
-    def test_list_acts(self, domain, action_list, back_fun=None):
-        thread_deal = threading.Thread(target=self.__test_list_thread, args=(domain, action_list, back_fun), name="TestEngine deal tester")
+    def test_list_acts(self, domain, action_list, back_fun=None, result_back=None):
+        thread_deal = threading.Thread(target=self.__test_list_thread, args=(domain, action_list, back_fun, result_back), name="TestEngine deal tester")
         thread_deal.start()
 
-    def test_deal(self, domain, action_obj, back_fun=None):
-        thread_deal = threading.Thread(target=self.__test_do_thread, args=(domain, action_obj, back_fun), name="TestEngine deal tester")
+    def test_deal(self, domain, action_obj, back_fun=None, result_back=None):
+        thread_deal = threading.Thread(target=self.__test_do_thread, args=(domain, action_obj, back_fun, result_back), name="TestEngine deal tester")
+        # hasattr(result_back, "__call__")
         thread_deal.start()
 
     def quit(self):
@@ -48,7 +49,7 @@ class TestEngine(object):
     def is_quited(self):
         return self.__quit
 
-    def __test_list_thread(self, domain, action_list, back_fun=None):
+    def __test_list_thread(self, domain, action_list, back_fun=None, result_back=None):
         try:
             for action in action_list:
                 self.__test_do(domain, action)
@@ -64,7 +65,7 @@ class TestEngine(object):
                     back_fun()
 
 
-    def __test_do_thread(self, domain, action_obj, back_fun=None):
+    def __test_do_thread(self, domain, action_obj, back_fun=None, result_back=None):
         try:
             self.__test_do(domain, action_obj)
         except Exception as e:
