@@ -78,3 +78,14 @@ class TesterActionData(BasicModule):
         self.elValue = None
         self.testerResult = None
         BasicModule.__init__(self, dict_list, deep_split)
+
+class TesterResult(object):
+    '''
+    测试结果服务
+    '''
+    def __init__(self, result, exist):
+        self.result = result
+        self.exist = exist
+
+    def result_v(self):
+        return "tester result:%s, exist:%s" % (self.result, self.exist)

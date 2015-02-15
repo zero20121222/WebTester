@@ -134,7 +134,7 @@ class ClientEngine(object):
             elif message_obj.method == "testDeal":
                 # 处理测试数据信息
                 tester_data = TesterData(message_obj.data_obj["domain"], TesterAction().dict_to_list(message_obj.data_obj["testerAction"]))
-                self.__engine.test_list_acts(tester_data.domain, tester_data.testerAction, self.__close_engine)
+                self.__engine.test_list_acts(tester_data.domain, tester_data.testerAction, self.__close_engine, self.__action_result)
                 MessageDeal.engine_info("[Info]Deal tester engine %s" % message_obj.data_obj["testerAction"])
 
             else:
@@ -146,6 +146,9 @@ class ClientEngine(object):
 
     def __close_engine(self):
         self.queue.put(None)
+
+    def __action_result(self, result):
+        MessageDeal.test_result("[Result]Tester: %s" % result.result_v())
 
     # def test_deal(self, url):
     #     try:

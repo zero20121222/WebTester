@@ -5,11 +5,11 @@ __author__ = 'MichaelZhao'
 
 
 import sys
-import json
 import threading
 from time import sleep
 from splinter.browser import Browser
 from engine.el_enum import EL_TYPE, ACTION_TYPE
+from engine.test_module import TesterFormData, TesterActionData, TesterForms, TesterResult
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -67,7 +67,7 @@ class TestEngine(object):
 
     def __test_do_thread(self, domain, action_obj, back_fun=None, result_back=None):
         try:
-            self.__test_do(domain, action_obj)
+            self.__test_do(domain, action_obj, result_back)
         except Exception as e:
             raise Exception("[Error code] deal test failed, error code=", e)
         finally:
@@ -80,29 +80,31 @@ class TestEngine(object):
                     back_fun()
 
 
-    def __test_do(self, domain, action_obj):
+    def __test_do(self, domain, action_obj, result_back=None):
         test_url = domain+action_obj.urlPath
         self.__browser.visit(test_url)
 
         # form表单默认为第一个action循环测试，之后的action按照顺序执行
-        action_list = json.loads(action_obj.actionList) if isinstance(action_obj.actionList, (str, unicode)) else action_obj.actionList
+        action_list = TesterActionData().dict_to_list(action_obj.actionList)
         if action_obj.forms is not None:
             form_action = action_list[0]
-            forms = json.loads(action_obj.forms) if isinstance(action_obj.forms, (str, unicode)) else action_obj.forms
+
+            forms = TesterForms().dict_to_list(action_obj.forms)
             for form in forms:
-                for param in form["params"]:
-                    self.__set_value(int(param["formType"]), param["formElName"], param["formElValue"].decode("utf-8"))
+                params = TesterFormData().dict_to_list(form.params)
+                for param in params:
+                    self.__set_value(int(param.formType), param.formElName, param.formElValue.decode("utf-8"))
                     sleep(TestEngine.__sleep_time)
 
-                self.__deal_action(form_action["action"], form_action["elType"], form_action["elValue"])
+                self.__deal_action(form_action, result_back)
                 sleep(action_obj.sleepTime)
 
             for action_deal in action_list[1:]:
-                self.__deal_action(action_deal["action"], action_deal["elType"], action_deal["elValue"])
+                self.__deal_action(action_deal, result_back)
                 sleep(action_obj.sleepTime)
         else:
             for action_deal in action_list:
-                self.__deal_action(action_deal["action"], action_deal["elType"], action_deal["elValue"])
+                self.__deal_action(action_deal, result_back)
                 sleep(action_obj.sleepTime)
 
 
@@ -145,26 +147,32 @@ class TestEngine(object):
             raise ValueError("Test Engine can't deal the element type:%s, el_type:%s", ele_type, el_type)
 
 
-    def __deal_action(self, action, el_type, el_value):
-        action_type = ACTION_TYPE.value(action)
+    def __deal_action(self, action_data, result_back=None):
+        action_type = ACTION_TYPE.value(action_data.action)
 
         # 当页面跳转是抓取最后一个打开的窗口页面
         self.__browser.windows.current = self.__browser.windows[-1]
 
         if action_type == "click":
-            self.__mouse_of_click(self.__event_element(el_type, el_value).first)
+            self.__mouse_of_click(self.__event_element(action_data.elType, action_data.elValue).first)
         elif action_type == "double click":
-            self.__mouse_of_double_click(self.__event_element(el_type, el_value).first)
+            self.__mouse_of_double_click(self.__event_element(action_data.elType, action_data.elValue).first)
         elif action_type == "right click":
-            self.__mouse_of_right_click(self.__event_element(el_type, el_value).first)
+            self.__mouse_of_right_click(self.__event_element(action_data.elType, action_data.elValue).first)
         elif action_type == "mouse over":
-            self.__event_element(el_type, el_value).first.mouse_over()
+            self.__event_element(action_data.elType, action_data.elValue).first.mouse_over()
         elif action_type == "mouse out":
-            self.__event_element(el_type, el_value).first.mouse_out()
+            self.__event_element(action_data.elType, action_data.elValue).first.mouse_out()
         elif action_type == "select":
-            self.__event_element(el_type, el_value).first.select()
+            self.__event_element(action_data.elType, action_data.elValue).first.select()
         else:
-            raise Exception("don't find action for action:%s", action)
+            raise Exception("don't find action for action:%s", action_data.action)
+
+        try:
+            if action_data.testerResult is not None and result_back is not None:
+                result_back(TesterResult(action_data.testerResult, self.__browser.is_text_present(action_data.testerResult)))
+        except Exception:
+            result_back(TesterResult(action_data.testerResult, False))
 
 
     def __mouse_of_click(self, event_deal_obj):
