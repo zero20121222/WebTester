@@ -52,7 +52,7 @@ class TestEngine(object):
     def __test_list_thread(self, domain, action_list, back_fun=None, result_back=None):
         try:
             for action in action_list:
-                self.__test_do(domain, action)
+                self.__test_do(domain, action, result_back)
         except Exception as e:
             raise Exception("[Error code] deal test list failed, error code=", e)
         finally:
@@ -170,6 +170,7 @@ class TestEngine(object):
 
         try:
             if action_data.testerResult is not None and result_back is not None:
+                sleep(3)
                 result_back(TesterResult(action_data.testerResult, self.__browser.is_text_present(action_data.testerResult)))
         except Exception:
             result_back(TesterResult(action_data.testerResult, False))
