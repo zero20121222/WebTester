@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript" src="jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="options.js"></script>
+    <link rel="stylesheet" href="popup.css" type="text/css"/>
+    <title>WebTester</title>
+    <style type="text/css">
+      body {
+          font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+          font-size: 12px;
+          min-width: 500px;
+          text-align: center;
+      }
+    </style>
+</head>
+
+<body>
+  <h3>WebTester</h3>
+  <p>作为后期WebTester的扩展处理操作！</p>
+  <div class="contact_form">
+    <ul>
+      <li>
+        <label for="testerServer">Tester Server:</label>
+        <input type="text" name="testerServer" id="testerServer" placeholder="http://localhost:8888" required/>
+      </li>
+      <li>
+        <label for="webDriver">Tester Engine:</label>
+        <select id="webDriver">
+          <option value="chrome">Chrome WebDriver</option>
+          <option value="firefox">Firefox WebDriver</option>
+          <option value="remote">Remote WebDriver</option>
+          <option value="phantomjs">Phantomjs WebDriver</option>
+        </select>
+       </li>
+       <li>
+        <label for="logLevel">Log Level:</label>
+        <select id="logLevel">
+          <option value="log">log level</option>
+          <option value="info">info level</option>
+          <option value="error">error level</option>
+          <option value="tResult">tResult level</option>
+        </select>
+       </li>
+       <li>
+        <label for="syncTester">Sync Tester:</label>
+        <input type="checkbox" id="syncTester"/>
+       </li>
+    </ul>
+    <button class="submit" id="save_option">save</button>
+  </div>
+</body>
+</html>
