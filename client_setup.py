@@ -1,4 +1,14 @@
+import sys
+import shutil
 from setuptools import setup, find_packages
+
+# setup file path
+path = sys.path[0]
+
+# copy com.tester.client.json to /Library/Google/Chrome/NativeMessagingHosts
+tester_host = path+"/extension/com.tester.client.json"
+chrome_native_host = "/Library/Google/Chrome/NativeMessagingHosts"
+shutil.copy(tester_host, chrome_native_host)
 
 PACKAGE = ""
 NAME = "testerClient"

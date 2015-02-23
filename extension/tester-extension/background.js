@@ -41,7 +41,7 @@ function get_testerEngine(driver, executePath){
 
 //初始化测试引擎
 function init_testerEngine(driver, executePath){
-	testEngine = chrome.runtime.connectNative('com.webtester.test');
+	testEngine = chrome.runtime.connectNative('com.tester.client');
 
 	testEngine.onMessage.addListener(function(msg) {
 		console.log("WebTester return:" + formatResult(msg));
