@@ -17,6 +17,10 @@ function init_localStorage() {
 		localStorage.tester_list = JSON.stringify([]);
 	}
 
+	if(localStorage.needSyncTester == null){
+	    localStorage.needSyncTester = JSON.stringify([]);
+	}
+
 	if(localStorage.log_result == null){
 		localStorage.log_result = JSON.stringify([]);
 	}

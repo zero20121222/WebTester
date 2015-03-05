@@ -2,7 +2,7 @@
   "name": "WebTester",
   "description": "WebTester",
   "version": "1.0",
-  "permissions": ["nativeMessaging"],
+  "permissions": ["cookies", "nativeMessaging"],
   "background": {
     "scripts": ["background.js"]
   },

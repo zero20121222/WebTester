@@ -1,6 +1,7 @@
 var back_env = chrome.extension.getBackgroundPage();
 
 $(document).ready(function() {
+
 	$("#content").find("[id^='tab']").hide(); // Hide all content
     $("#tabs li:first").attr("id","current"); // Activate the first tab
     $("#content #tab1").fadeIn(); // Show first tab's content
@@ -30,7 +31,27 @@ $(document).ready(function() {
     });
 
     $("#btn_commit").click(function(){
-    	sendMessage();
+        sendMessage();
+
+    	if(localStorage.syncTester == "true"){
+            $('.theme-popover-mask').fadeIn(100);
+            $('#sync_tester').slideDown(200);
+
+            setSearchQueue();
+    	}
+    });
+
+    $('.close').click(function(){
+        $('.theme-popover-mask').fadeOut(100);
+        $('#sync_tester').slideUp(200);
+    });
+
+    //同步测试数据到server端
+    $('#save_tester').click(function(){
+        syncTesterInfo();
+
+        $('.theme-popover-mask').fadeOut(100);
+        $('#sync_tester').slideUp(200);
     });
 
     $("#close_engine").click(function(){
@@ -50,8 +71,78 @@ function sendMessage(){
     var engine_value = $("#testerEngine");
 	var engine = back_env.get_testerEngine(engine_value.text(), engine_value.val());
 
-	console.log(formatTesterData());
-	back_env.sendTester(engine_value.text(), engine_value.val(), formatTesterData());
+    var tester_data = formatTesterData();
+	back_env.sendTester(engine_value.text(), engine_value.val(), tester_data);
+
+    initSyncNames(tester_data);
+
+	var syncTester = JSON.parse(localStorage.needSyncTester);
+	syncTester.push(tester_data);
+    localStorage.needSyncTester = JSON.stringify(syncTester);
+}
+
+function initSyncNames(testerData){
+    var testerLi = $("#testerNameL").children();
+
+    //删除子元素
+    for(var i=1; i<testerLi.length; i++){
+        $(testerLi[i]).remove();
+    }
+
+    var idNum = null;
+    for(var key in testerData.testerAction){
+        idNum = Number(key) + 1;
+        $("<li><label for='testerName"+idNum+"'>TesterName"+idNum+":</label><input type='text' name='testerName"+idNum+"' id='testerName"+idNum+"'/></li>").appendTo($("#testerNameL"));
+    }
+}
+
+function syncTesterInfo(){
+    var testerLi = $("#testerNameL").children();
+
+    var nameList = new Array();
+    for(var i=1; i<testerLi.length; i++){
+        nameList.push($($(testerLi[i]).children("[type=text]")[0]).val());
+    }
+
+    var ifSet = false;
+    for(var key in nameList){
+        if(nameList[key] != null && nameList[key] != ""){
+            ifSet = true;
+        }
+    }
+
+    if(ifSet){
+        var syncTester = JSON.parse(localStorage.needSyncTester);
+        var testerGroup = syncTester.pop();
+
+        var testQueue = Number($("#testQueue").val());
+
+        var actionList = testerGroup.testerAction;
+        for(var key in actionList){
+            actionList[key]["queueId"] = testQueue;
+
+            for(var key1 in actionList[key]["forms"]){
+                actionList[key]["forms"][key1]["testName"] = nameList[key];
+            }
+        }
+
+        console.log(testerGroup);
+
+        $.ajax({
+            type : 'POST',
+            contentType : 'application/json',
+            url : localStorage.testerServer+'/api/add_tester',
+            data: JSON.stringify(testerGroup),
+            dataType : 'text',
+            async : false,
+            success : function(data) {
+                alert("success")
+            },
+            error : function() {
+                alert("Error")
+            }
+        });
+    }
 }
 
 function formatFormData(liObj){
@@ -261,7 +352,6 @@ function setActionElement(tagName, elParam){
 	return li;
 }
 
-// [{"mType":"info","message":"[Info]Init clientEngine."},{"mType":"info","message":"[Info]Deal function.TesterData:{u'action': u'1', u'elType': u'1', u'elValue': u'login-submit'}"}]
 function setTesterLog(){
 	$("#app_log_list").empty();
 
@@ -308,4 +398,18 @@ function deleteCurrentNote() {
 	delete object[uuid];
 	localStorage.mynotes = JSON.stringify(object);
 	renderNotes();
+}
+
+
+
+/********************* 远程Tester服务数据 **********************/
+function setSearchQueue(){
+    $.get(localStorage.testerServer+"/api/search_queue", function(result){
+        var queueObjList = JSON.parse(result);
+
+        var queueOptions = $("#testQueue");
+        for (var key in queueObjList){
+            $("<option value='"+queueObjList[key]["id"]+"'>"+queueObjList[key]["queueName"]+"</option>").appendTo(queueOptions);
+        }
+    });
 }

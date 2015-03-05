@@ -10,8 +10,14 @@ summary.services.domain_handler.DomainHandler:
 summary.services.queue_handler.QueueHandler:
   url: '/edit_queue'
 
+summary.services.queue_handler.QueueFindHandler:
+  url: '/api/search_queue'
+
 summary.services.action_handler.ActionHandler:
   url: '/add_tester'
+
+summary.services.action_handler.OutActionHandler:
+  url: '/api/add_tester'
 
 summary.services.tester_handler.TesterHandler:
   url: '/api/tester_deal'
