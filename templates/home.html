@@ -72,18 +72,6 @@
 
 {% block bottom %}
 <script type="text/javascript">
-    $.ajaxSetup({
-        beforeSend: function(jqXHR, settings) {
-            type = settings.type
-            if (type != 'GET' && type != 'HEAD' && type != 'OPTIONS') {
-                var pattern = /(.+; *)?_xsrf *= *([^;" ]+)/;
-                var xsrf = pattern.exec(document.cookie);
-                if (xsrf) {
-                    jqXHR.setRequestHeader('X-Xsrftoken', xsrf[2]);
-                }
-            }
-    }});
-
     jQuery(document).ready(function($) {
         FORM_TYPE = {"1": "text", "2": "radio", "3": "select", "4": "file", "5": "checked"}
         EL_TYPE = {"1": "id", "2": "name", "3": "tag", "4": "value", "5": "selector", "6": "css"}

@@ -5,7 +5,6 @@
     <div class="test_form">
         <div>
             <form class="contact_form" action="#" method="post" name="contact_form">
-                {% module xsrf_form_html() %}
                 <label for="domain_select">Test Domain:</label>
                 <select id="domain_select">
                     {% for domain_val in domain_values %}
@@ -98,7 +97,6 @@
     </div>
     <div class="dform">
         <form class="contact_form" name="domain_form" action="/edit_domain" method="post">
-            {% module xsrf_form_html() %}
             <ul>
                 <li>
                     <label for="testDomain">TestDomain:</label>
@@ -117,7 +115,6 @@
     </div>
     <div class="dform">
         <form class="contact_form" name="queue_form" action="/edit_queue" method="post">
-            {% module xsrf_form_html() %}
             <ul>
                 <li>
                     <label for="testQueue">TestQueue:</label>
@@ -133,18 +130,6 @@
 
 {% block bottom %}
 <script type="text/javascript">
-    $.ajaxSetup({
-        beforeSend: function(jqXHR, settings) {
-            type = settings.type
-            if (type != 'GET' && type != 'HEAD' && type != 'OPTIONS') {
-                var pattern = /(.+; *)?_xsrf *= *([^;" ]+)/;
-                var xsrf = pattern.exec(document.cookie);
-                if (xsrf) {
-                    jqXHR.setRequestHeader('X-Xsrftoken', xsrf[2]);
-                }
-            }
-    }});
-
     jQuery(document).ready(function($) {
         form_num = 1;
         action_num = 1;
