@@ -23,6 +23,11 @@ class JsonHelper(object):
         else:
             return None
 
+    @staticmethod
+    def loads(str_val):
+        if isinstance(str_val , str):
+            return json.loads(str_val)
+
 class Objects(object):
     def __init__(self):
         pass

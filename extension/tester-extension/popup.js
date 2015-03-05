@@ -245,7 +245,8 @@ function formatTesterData(){
 function getDomainAndPath(urlPath){
 	var reg = new RegExp('^(https?|ftp|file)://[-a-zA-Z0-9+&@#%?=~_|!:,.;]*[/]', 'gm');
 
-	var domain = urlPath.match(reg)[0];
+    var oldDomainP = urlPath.match(reg)[0];
+	var domain = oldDomainP.substring(0, oldDomainP.length-1);
 	var path = urlPath.substring(domain.length , urlPath.length);
 
 	return new Array(domain , path);
