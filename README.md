@@ -31,7 +31,7 @@ WebTester based on python, the user can customize the testing process, convenien
     * tester-extension will save COM+Click event
 
 ##### Test Client Images
-<img src="http://img.blog.csdn.net/20150305225919104" width = "450" height = "300" />
+<img src="http://img.blog.csdn.net/20150305232913569" width = "450" height = "300" />
 
 ### Tester WebDriver
 * [Chrome WebDriver](http://splinter.cobrateam.info/en/latest/drivers/chrome.html) brew install chromedriver
