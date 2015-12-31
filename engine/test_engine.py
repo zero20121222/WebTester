@@ -93,7 +93,7 @@ class TestEngine(object):
             for form in forms:
                 params = TesterFormData().dict_to_list(form.params)
                 for param in params:
-                    self.__set_value(int(param.formType), param.formElName, param.formElValue.decode("utf-8"))
+                    self.__set_value(int(param.formType), param.formElName, param.formElValue.decode("utf-8"), int(param.index))
                     sleep(TestEngine.__sleep_time)
 
                 self.__deal_action(form_action, result_back)
@@ -108,9 +108,9 @@ class TestEngine(object):
                 sleep(action_obj.sleepTime)
 
 
-    def __set_value(self, form_type, el_name, el_value):
+    def __set_value(self, form_type, el_name, el_value, index):
         elements = self.__event_element(form_type, el_name)
-        element = elements.first
+        element = elements[index]
         if element['type'] in ['text', 'password', 'tel'] or element.tag_name == 'textarea':
             element.value = el_value
         elif element['type'] == 'checkbox':
@@ -154,17 +154,17 @@ class TestEngine(object):
         self.__browser.windows.current = self.__browser.windows[-1]
 
         if action_type == "click":
-            self.__mouse_of_click(self.__event_element(action_data.elType, action_data.elValue).first)
+            self.__mouse_of_click(self.__event_element(action_data.elType, action_data.elValue)[int(action_data.index)])
         elif action_type == "double click":
-            self.__mouse_of_double_click(self.__event_element(action_data.elType, action_data.elValue).first)
+            self.__mouse_of_double_click(self.__event_element(action_data.elType, action_data.elValue)[int(action_data.index)])
         elif action_type == "right click":
-            self.__mouse_of_right_click(self.__event_element(action_data.elType, action_data.elValue).first)
+            self.__mouse_of_right_click(self.__event_element(action_data.elType, action_data.elValue)[int(action_data.index)])
         elif action_type == "mouse over":
-            self.__event_element(action_data.elType, action_data.elValue).first.mouse_over()
+            self.__event_element(action_data.elType, action_data.elValue)[int(action_data.index)].mouse_over()
         elif action_type == "mouse out":
-            self.__event_element(action_data.elType, action_data.elValue).first.mouse_out()
+            self.__event_element(action_data.elType, action_data.elValue)[int(action_data.index)].mouse_out()
         elif action_type == "select":
-            self.__event_element(action_data.elType, action_data.elValue).first.select()
+            self.__event_element(action_data.elType, action_data.elValue)[int(action_data.index)].select()
         else:
             raise Exception("don't find action for action:%s", action_data.action)
 

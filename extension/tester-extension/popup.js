@@ -160,6 +160,7 @@ function formatFormData(liObj){
 		if(key == "name" || key == "id" || key == "class"){
 			formData["formType"] = back_env.EL_TYPE[key];
 			formData["formElName"] = dataInfo[key];
+			formData["index"] = dataInfo["index"];
 		}else{
 			if(key == "value"){
 				formData["formElValue"] = dataInfo[key];
@@ -188,6 +189,7 @@ function formatActionData(liObj){
 		if(key == "name" || key == "id" || key == "class"){
 			actionData["elType"] = back_env.EL_TYPE[key];
 			actionData["elValue"] = dataInfo[key];
+			actionData["index"] = dataInfo["index"];
 		}else if(key == "value"){
 			actionData["testerResult"] = dataInfo[key];
 		}
@@ -309,13 +311,22 @@ function setFormElement(tagName, elParam){
 		$("<span style='margin-right:20px;'>type:"+elParam["type"]+"</span>").appendTo(li);
 	}
 
-	if(elParam["name"] != "undefined" && elParam["name"] != null){
-		$("<span style='margin-right:20px;'>name:"+elParam["name"]+"</span>").appendTo(li);
-	}else if(elParam["id"] != "undefined" && elParam["id"] != null){
+	if(elParam["id"] != "undefined" && elParam["id"] != null){
 		$("<span style='margin-right:20px;'>id:"+elParam["id"]+"</span>").appendTo(li);
+		if(elParam["id_index"] != "undefined" && elParam["id_index"] != null){
+			$("<span style='margin-right:20px;'>index:"+elParam["id_index"]+"</span><br>").appendTo(li);
+		}
 	}else if(elParam["class"] != "undefined" && elParam["class"] != null){
 		var cls_list = elParam["class"].split(" ");
 		$("<span style='margin-right:20px;'>class:."+cls_list[cls_list.length-1]+"</span>").appendTo(li);
+		if(elParam["class_index"] != "undefined" && elParam["class_index"] != null){
+			$("<span style='margin-right:20px;'>index:"+elParam["class_index"]+"</span><br>").appendTo(li);
+		}
+	}else if(elParam["name"] != "undefined" && elParam["name"] != null){
+		$("<span style='margin-right:20px;'>name:"+elParam["name"]+"</span>").appendTo(li);
+		if(elParam["name_index"] != "undefined" && elParam["name_index"] != null){
+			$("<span style='margin-right:20px;'>index:"+elParam["name_index"]+"</span><br>").appendTo(li);
+		}
 	}
 
 	$("<br><span style='margin-right:20px;'>value:<input name='tester_value' type='text' style='margin-left:20px;' value='"+elParam["value"]+"'></input></span>").appendTo(li);
@@ -330,13 +341,22 @@ function setActionElement(tagName, elParam){
 	var li = $("<li><input class='tester_check' style='margin-right:10px;' type='checkbox'/>"
 			  +"<span name='tester_type' style='margin-right:10px'>action</span><span style='margin-right:20px;'>El:"+tagName+"</span></li>");
 
-	if(elParam["name"] != "undefined" && elParam["name"] != null){
-		$("<span style='margin-right:20px;'>name:"+elParam["name"]+"</span><br>").appendTo(li);
-	}else if(elParam["id"] != "undefined" && elParam["id"] != null){
-		$("<span style='margin-right:20px;'>id:"+elParam["id"]+"</span><br>").appendTo(li);
+	if(elParam["id"] != "undefined" && elParam["id"] != null){
+		$("<span style='margin-right:20px;'>id:"+elParam["id"]+"</span>").appendTo(li);
+		if(elParam["id_index"] != "undefined" && elParam["id_index"] != null){
+			$("<span style='margin-right:20px;'>index:"+elParam["id_index"]+"</span><br>").appendTo(li);
+		}
 	}else if(elParam["class"] != "undefined" && elParam["class"] != null){
 		var cls_list = elParam["class"].split(" ");
-		$("<span style='margin-right:20px;'>class:."+cls_list[cls_list.length-1]+"</span><br>").appendTo(li);
+		$("<span style='margin-right:20px;'>class:."+cls_list[cls_list.length-1]+"</span>").appendTo(li);
+		if(elParam["class_index"] != "undefined" && elParam["class_index"] != null){
+			$("<span style='margin-right:20px;'>index:"+elParam["class_index"]+"</span><br>").appendTo(li);
+		}
+	}else if(elParam["name"] != "undefined" && elParam["name"] != null){
+		$("<span style='margin-right:20px;'>name:"+elParam["name"]+"</span>").appendTo(li);
+		if(elParam["name_index"] != "undefined" && elParam["name_index"] != null){
+			$("<span style='margin-right:20px;'>index:"+elParam["name_index"]+"</span><br>").appendTo(li);
+		}
 	}
 
 	var tester_res = $("<span style='margin-right:20px;display:none;'>result:<input name='tester_result' type='text' style='margin-left:20px;'/></span>");

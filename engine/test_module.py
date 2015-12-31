@@ -66,6 +66,7 @@ class TesterFormData(BasicModule):
         self.formType = None
         self.formElName = None
         self.formElValue = None
+        self.index = None
         BasicModule.__init__(self, dict_list, deep_split)
 
 class TesterActionData(BasicModule):
@@ -76,6 +77,7 @@ class TesterActionData(BasicModule):
         self.action = None
         self.elType = None
         self.elValue = None
+        self.index = None
         self.testerResult = None
         BasicModule.__init__(self, dict_list, deep_split)
 

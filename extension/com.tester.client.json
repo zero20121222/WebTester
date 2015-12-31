@@ -4,6 +4,6 @@
     "path": "/usr/local/bin/testerClient",
     "type": "stdio",
     "allowed_origins": [
-        "chrome-extension://iieblmlinpalkcokafibdilpoalnnlmk/"
+        "chrome-extension://ejjocfkecbdggjchigmgidcochoohcjf/"
     ]
 }

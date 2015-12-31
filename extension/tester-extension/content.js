@@ -143,15 +143,49 @@ function __li_view(attr_v, event_obj){
 			li_view += "<span>"+event_obj.attr(attr_v)+"</span></li>";
 			view_val.push(li_view);
 		}else{
-			li_view += "<span style='color:red'>"+event_obj.attr(attr_v)+"</span></li>";
+			li_view += "<span style='color:red'>"+__attr_obj(attr_v , event_obj)+"</span></li>";
 			view_val.push(li_view);
 			if(attr_v != "style"){
-				view_val.push(JSON.parse("{\""+attr_v+"\":\""+event_obj.attr(attr_v)+"\"}"));
+				view_val.push(JSON.parse("{\""+attr_v+"\":\""+__attr_obj(attr_v , event_obj)+"\",\""+attr_v+"_index\":\""+__obj_index(attr_v, event_obj)+"\"}"));
 			}
 		}
 	}
 
 	return view_val;
+}
+
+function __attr_obj(attr_v, event_obj){
+    if(attr_v == "class"){
+        return event_obj.attr(attr_v).replace(/\s/g, ".");
+    }else{
+        return event_obj.attr(attr_v);
+    }
+}
+
+function __obj_index(attr_v, event_obj){
+	var obj_index = -1;
+	var obj_list = [];
+	switch(attr_v){
+		case "id":
+			obj_list = $("#"+event_obj.attr(attr_v));
+			break;
+
+		case "class":
+			obj_list = $("."+__attr_obj(attr_v , event_obj));
+			break;
+
+		case "name":
+			obj_list = $("input[name='"+event_obj.attr(attr_v)+"']");
+			break;
+	}
+
+	for(var index=0; index<obj_list.length; index++){
+		if(event_obj[0] == obj_list[index]){
+			obj_index = index;
+			break;
+		}
+	}
+	return obj_index;
 }
 
 function __li_list_view(attr_s, event_obj){

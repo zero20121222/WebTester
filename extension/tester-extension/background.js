@@ -96,16 +96,18 @@ function TesterForms(testName, params){
 	this.params = params;
 }
 
-function TesterFormData(formType, formElName, formElValue){
+function TesterFormData(formType, formElName, formElValue, index){
 	this.formType = formType;
 	this.formElName = formElName;
 	this.formElValue = formElValue;
+	this.index = index;
 }
 
-function TesterActionData(action, elType, elValue, testerResult){
+function TesterActionData(action, elType, elValue, index, testerResult){
 	this.action = action;
 	this.elType = elType;
 	this.elValue = elValue;
+	this.index = index;
 	this.testerResult = testerResult;
 }
 
