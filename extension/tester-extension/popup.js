@@ -201,7 +201,7 @@ function formatActionData(liObj){
 }
 
 function formatTesterData(){
-	var pathArray = getDomainAndPath($("[name=start_url]").val());
+	var pathArray = getDomainAndPath($("input:radio[name=start_url]:checked").val());
 
 	var check_boxs = $(".tester_check");
 	var actionNum = 0, formNum = 0;
@@ -211,9 +211,11 @@ function formatTesterData(){
 
 	var testerForms = new back_env.TesterForms("Tester", new Array());
 	testerAction.forms.push(testerForms);
+	var checkBoxNum = 0;
 	for(var i=0; i<check_boxs.length; i++){
 		var checkObj = $(check_boxs[i]);
 		if(checkObj.prop("checked")==true){
+		    checkBoxNum++;
 			var liObj = checkObj.parent();
 			var testerType = liObj.children("[name=tester_type]")[0];
 
@@ -237,7 +239,7 @@ function formatTesterData(){
 		}
 	}
 
-	if(actionNum != formNum){
+	if(actionNum != formNum || checkBoxNum == 1){
 		testerListObj.push(testerAction);
 	}
 

@@ -38,3 +38,6 @@ WebTester based on python, the user can customize the testing process, convenien
 * [Firefox WebDriver](http://splinter.cobrateam.info/en/latest/drivers/firefox.html) brew install firefoxdriver
 * [Remote WebDriver](http://splinter.cobrateam.info/en/latest/drivers/remote.html) brew install remotedriver
 
+### Error
+* 在处理页面的ajax请求上存在问题
+

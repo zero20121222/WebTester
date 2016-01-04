@@ -21,10 +21,10 @@ class TestEngine(object):
 
     def __init__(self, browser_name, execute_path=None):
         if execute_path is None:
-            self.__browser = Browser(browser_name)
+            self.__browser = Browser(browser_name, fullscreen=True)
             self.__quit = False
         else:
-            self.__browser = Browser(browser_name, executable_path=execute_path)
+            self.__browser = Browser(browser_name, executable_path=execute_path, fullscreen=True)
             self.__quit = False
 
     @staticmethod
@@ -87,7 +87,7 @@ class TestEngine(object):
         # form表单默认为第一个action循环测试，之后的action按照顺序执行
         action_list = TesterActionData().dict_to_list(action_obj.actionList)
         if action_obj.forms is not None:
-            form_action = action_list[0]
+            form_action = action_list[0] if action_list else None
 
             forms = TesterForms().dict_to_list(action_obj.forms)
             for form in forms:
@@ -96,7 +96,9 @@ class TestEngine(object):
                     self.__set_value(int(param.formType), param.formElName, param.formElValue.decode("utf-8"), int(param.index))
                     sleep(TestEngine.__sleep_time)
 
-                self.__deal_action(form_action, result_back)
+                if form_action is not None:
+                    self.__deal_action(form_action, result_back)
+
                 sleep(action_obj.sleepTime)
 
             for action_deal in action_list[1:]:
@@ -119,9 +121,7 @@ class TestEngine(object):
             else:
                 element.uncheck()
         elif element['type'] == 'radio':
-            for field in elements:
-                if field.value == el_value:
-                    field.click()
+            element.click()
         elif element._element.tag_name == 'select':
             element.find_by_value(el_value).first._element.click()
         else:
